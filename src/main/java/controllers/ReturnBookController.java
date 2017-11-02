@@ -2,12 +2,14 @@ package controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import userAndBookClasses.Book;
@@ -45,6 +47,8 @@ public class ReturnBookController {
     public Label titleLabel;
     @FXML
     public Label authorLabel;
+    @FXML
+    public Label bookYearLabel;
 
 
     LibWorker libWorker;
@@ -87,6 +91,7 @@ public class ReturnBookController {
                 borrowingDateColumn.setCellValueFactory(new PropertyValueFactory<Book, String>("borrowingDate"));
 
                 tableBorrowingBooks.setItems(bookList);
+                mauseClicked();
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -111,8 +116,23 @@ public class ReturnBookController {
 
     }
 
+    private void mauseClicked() {
+        tableBorrowingBooks.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (event.getClickCount() == 2) {
+                    titleLabel.setText(tableBorrowingBooks.getSelectionModel().getSelectedItem().getTitle());
+                    authorLabel.setText(tableBorrowingBooks.getSelectionModel().getSelectedItem().getAuthor());
+                    bookYearLabel.setText(tableBorrowingBooks.getSelectionModel().getSelectedItem().getReleaseDate());
+                }
+            }
+        });
+    }
 
-    public void returnBook(javafx.event.ActionEvent actionEvent) {
+
+    public void returnBook(javafx.event.ActionEvent actionEvent) throws SQLException {
+
+        libWorker.returnUserBook(LoginCheck.userLogin, titleLabel.getText(), authorLabel.getText(), bookYearLabel.getText());
 
     }
 

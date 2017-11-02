@@ -1,13 +1,16 @@
 package controllers;
 
+import Dialogs.Dialogs;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import userAndBookClasses.Book;
@@ -43,6 +46,8 @@ public class TakeBookController {
     public Label titleLabel;
     @FXML
     public Label authorLabel;
+    @FXML
+    public Label bookYearLabel;
 
 
     public void showTakeBookWindow(javafx.event.ActionEvent actionEvent) {
@@ -74,6 +79,7 @@ public class TakeBookController {
         releaseYearColumn.setCellValueFactory(new PropertyValueFactory<Book, String>("releaseDate"));
 
         tableBooks.setItems(bookList);
+        mauseClicked();
     }
 
 
@@ -96,7 +102,27 @@ public class TakeBookController {
 
     }
 
-    public void takeBook(javafx.event.ActionEvent actionEvent) {
-        loadDataFromDbIntoBookList();
+    private void mauseClicked() {
+        tableBooks.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (event.getClickCount() == 2) {
+                    titleLabel.setText(tableBooks.getSelectionModel().getSelectedItem().getTitle());
+                    authorLabel.setText(tableBooks.getSelectionModel().getSelectedItem().getAuthor());
+                    bookYearLabel.setText(tableBooks.getSelectionModel().getSelectedItem().getReleaseDate());
+                }
+            }
+        });
+    }
+
+    public void takeBook(javafx.event.ActionEvent actionEvent) throws SQLException {
+        LibWorker libWorker = new LibWorker();
+
+        if (titleLabel.getText().equals("")) {
+            Dialogs.showInfoDialog("Hey", "Make your choice");
+        }
+        if (!libWorker.userBorrowThisBook(LoginCheck.userLogin, titleLabel.getText(), authorLabel.getText(), bookYearLabel.getText())) {
+            libWorker.giveNewBookUser(LoginCheck.userLogin, titleLabel.getText(), authorLabel.getText(), bookYearLabel.getText());
+        } else Dialogs.showInfoDialog("Opps", "It's looks like you have already borrowed this book");
     }
 }

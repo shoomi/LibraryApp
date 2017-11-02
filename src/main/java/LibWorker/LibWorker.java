@@ -89,9 +89,17 @@ public class LibWorker {
     }
 
 
-    public void giveNewBookToUser(int userId, String bookName, String booksYearRelese) throws SQLException {
-        int bookId = getIdBookByName(bookName, booksYearRelese);
-        statement.execute(String.format("INSERT INTO  mylibrary.`borrowings` (user_id, book_id, borrowing_date) VALUES ('%d','%d', '%s')", userId, bookId, new Util().getCurrentTime()));
+    public void giveNewBookUser(String userLogin, String bookTitle, String bookAuthor, String booksYearRelese) throws SQLException {
+
+        statement.execute(String.format("INSERT INTO mylibrary.`borrowings` (user_id, book_id, borrowing_date) VALUES ((SELECT user_id\n" +
+                "                                                                               FROM users\n" +
+                "                                                                               WHERE login = '%s'),\n" +
+                "                                                                              (SELECT book_id\n" +
+                "                                                                               FROM books\n" +
+                "                                                                               WHERE\n" +
+                "                                                                                 title = '%s' AND author = '%s' AND\n" +
+                "                                                                                 release_date = '%s'),\n" +
+                "                                                                              '%s')", userLogin, bookTitle, bookAuthor, booksYearRelese, new Util().getCurrentTime()));
         System.out.println("This book is yours! Nice reading");
         statement.close();
     }
@@ -110,11 +118,17 @@ public class LibWorker {
     }
 
 
-    public void returnUserBook(int idUser, String bookName, String booksYearRelese) throws SQLException {
-        int idBook = getIdBookByName(bookName, booksYearRelese);
+    public void returnUserBook(String userLogin, String bookTitle, String bookAuthor, String booksYearRelese) throws SQLException {
+
         statement.execute(String.format("UPDATE mylibrary.borrowings\n" +
                 "SET returning_date = '%s'\n" +
-                "WHERE user_id = '%d' AND book_id = '%d'", new Util().getCurrentTime(), idUser, idBook));
+                "WHERE user_id = (SELECT user_id\n" +
+                "                 FROM users\n" +
+                "                 WHERE login = '%s') AND book_id = (SELECT book_id\n" +
+                "                                                        FROM books\n" +
+                "                                                        WHERE\n" +
+                "                                                          title = '%s' AND author = '%s' AND\n" +
+                "                                                          release_date = '%s') and returning_date is NULL", new Util().getCurrentTime(), userLogin, bookTitle, bookAuthor, booksYearRelese));
         statement.close();
     }
 
@@ -151,11 +165,12 @@ public class LibWorker {
 
     ///////////////
 
-    public boolean userBorrowThisBook(int userId, String bookName, String booksYearRelese) throws SQLException {
+    public boolean userBorrowThisBook(String userLogin, String bookTitle, String bookAuthor, String booksYearRelese) throws SQLException {
         String query = String.format("SELECT borrowing_date\n" +
-                "FROM borrowing_date\n" +
+                "FROM borrowings\n" +
                 "  INNER JOIN books ON borrowings.book_id = books.book_id\n" +
-                "WHERE borrowings.user_id = '%d' AND title = '%s' AND release_date = '%s' AND returning_date IS NULL", userId, bookName, booksYearRelese);
+                "WHERE borrowings.user_id = (SELECT user_id FROM users WHERE login = '%s') AND\n" +
+                "      title = '%s' and author = '%s' AND release_date = '%s' AND returning_date IS NULL", userLogin, bookTitle, bookAuthor, booksYearRelese);
         ResultSet rs = statement.executeQuery(query);
         if (rs.next()) {
             return true;

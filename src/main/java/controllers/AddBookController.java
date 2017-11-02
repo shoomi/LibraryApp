@@ -64,10 +64,12 @@ public class AddBookController {
             try {
                 new RegBookInDb().addNewBook(titleField.getText(),authorField.getText(), yearBookField.getText(), Integer.parseInt(numberOfBooksField.getText()));
                 addingBookConfirmLabel.setText(String.format("The book '%s' '%s' was successfully added to database ",titleField.getText(),authorField.getText()));
+
                 titleField.setText(null);
                 authorField.setText(null);
                 yearBookField.setText(null);
                 numberOfBooksField.setText(null);
+
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -78,6 +80,7 @@ public class AddBookController {
 
         boolean yaerIsValid = false;
         boolean amountOfBooksIsValid = false;
+
         boolean titleIsNotEmpty = FormValidadtion.textFieldNotEmpty(titleField, titleLabel, "enter Title");
         boolean authorIsNotEmpty = FormValidadtion.textFieldNotEmpty(authorField, authorLabel, "enter Author");
         boolean yearIsNotEmpty = FormValidadtion.textFieldNotEmpty(yearBookField, yearBookLabel, "enter year in format YYYY");

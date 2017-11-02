@@ -66,22 +66,25 @@ public class AddUserController {
     public void addUserToDb(javafx.event.ActionEvent actionEvent) {
 
         if (usersValuesControl()) {
+
             new RegUserInDb().addNewUser(loginField.getText(), firstNameField.getText(), lastNameField.getText(), telephoneField.getText(), dateField.getText());
             addingConfirmLabel.setText(String.format("user  '%s'  was successfully added to database", loginField.getText()));
+
             loginField.setText(null);
             firstNameField.setText(null);
             lastNameField.setText(null);
             telephoneField.setText(null);
             dateField.setText(null);
         }
-
     }
 
     private boolean usersValuesControl() {
+
         addingConfirmLabel.setText(null);
         boolean telephoneFieldIsValid = false;
         boolean loginIsNotBusy = false;
         boolean dateIsValid = false;
+
         boolean firstNameFieldIsNotEmpty = FormValidadtion.textFieldNotEmpty(firstNameField, firsNameLabel, "enter Firs Name");
         boolean lastNameFieldIsNotEmpty = FormValidadtion.textFieldNotEmpty(lastNameField, lastNameLabel, "enter Last Name");
         boolean loginFieldIsNotEmpty = FormValidadtion.textFieldNotEmpty(loginField, loginLabel, "enter login");
@@ -102,6 +105,5 @@ public class AddUserController {
 
         return firstNameFieldIsNotEmpty && lastNameFieldIsNotEmpty && loginFieldIsNotEmpty && telephoneFieldIsNotEmpty && telephoneFieldIsValid && loginIsNotBusy && dateFieldIsNotEmpty && dateIsValid;
     }
-
 
 }
