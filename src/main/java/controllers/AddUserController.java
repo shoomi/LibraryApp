@@ -56,7 +56,10 @@ public class AddUserController {
             stage.setScene(new Scene(root));
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(((Node) actionEvent.getSource()).getScene().getWindow());
+
             stage.show();
+
+            System.out.println(((Node) actionEvent.getSource()));
 
         } catch (IOException e) {
             e.printStackTrace();

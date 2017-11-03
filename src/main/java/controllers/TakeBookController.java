@@ -3,6 +3,7 @@ package controllers;
 import Dialogs.Dialogs;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,12 +19,14 @@ import userAndBookClasses.Book;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
 
 import LibWorker.LibWorker;
 
 public class TakeBookController {
 
     public ObservableList<Book> bookList = FXCollections.observableArrayList();
+    public ObservableList<Book> backUpBookList = FXCollections.observableArrayList();
 
 
     @FXML
@@ -60,8 +63,7 @@ public class TakeBookController {
             stage.setMinWidth(500);
             stage.setResizable(false);
             stage.setScene(new Scene(root));
-            stage.initModality(Modality.WINDOW_MODAL);
-//            stage.initOwner(((Node)actionEvent.getSource()).getScene().getWindow());
+            stage.initModality(Modality.APPLICATION_MODAL);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -79,6 +81,8 @@ public class TakeBookController {
         releaseYearColumn.setCellValueFactory(new PropertyValueFactory<Book, String>("releaseDate"));
 
         tableBooks.setItems(bookList);
+        backUpBookList.addAll(bookList);
+
         mauseClicked();
     }
 
@@ -87,20 +91,42 @@ public class TakeBookController {
 
         try {
             LibWorker libWorker = new LibWorker();
-            ResultSet rs = libWorker.rsFreeBooksFromDb();
+            ResultSet rs = libWorker.rsFreeBooksFromDb();  /// select all free books from Db
             int nn = 1;
             while (rs.next()) {
                 bookList.add(new Book(nn, rs.getString("title"), rs.getString("author"), rs.getString("release_date")));
                 nn++;
             }
             rs.close();
-            libWorker.closeStatementAndConnection();
+//            libWorker.closeStatementAndConnection();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
     }
+
+
+    public void takeBook(javafx.event.ActionEvent actionEvent) throws SQLException {
+        LibWorker libWorker = new LibWorker();
+
+        if (titleLabel.getText().equals("")) {
+            Dialogs.showInfoDialog("Hey", "Make your choice");
+        }
+        if (!libWorker.userBorrowThisBook(LoginCheck.userLogin, titleLabel.getText(), authorLabel.getText(), bookYearLabel.getText())) {
+
+            libWorker.giveNewBookUser(LoginCheck.userLogin, titleLabel.getText(), authorLabel.getText(), bookYearLabel.getText());
+            Dialogs.showInfoDialog("Information", String.format("The book '%s' is yours! Nice reading", titleLabel.getText()));
+            titleLabel.setText("");
+            authorLabel.setText("");
+            bookYearLabel.setText("");
+
+            Book selectedItem = tableBooks.getSelectionModel().getSelectedItem();
+            tableBooks.getItems().remove(selectedItem);
+
+        } else Dialogs.showInfoDialog("Opps", "It's looks like you have already borrowed this book");
+    }
+
 
     private void mauseClicked() {
         tableBooks.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -115,14 +141,15 @@ public class TakeBookController {
         });
     }
 
-    public void takeBook(javafx.event.ActionEvent actionEvent) throws SQLException {
-        LibWorker libWorker = new LibWorker();
 
-        if (titleLabel.getText().equals("")) {
-            Dialogs.showInfoDialog("Hey", "Make your choice");
+    public void searchBook(ActionEvent actionEvent) {
+        bookList.clear();
+        for (Book book : backUpBookList) {
+            if (book.getTitle().toLowerCase().contains(searchField.getText().toLowerCase()) ||
+                    book.getAuthor().toLowerCase().contains(searchField.getText().toLowerCase()) ||
+                    book.getReleaseDate().toLowerCase().contains(searchField.getText())) {
+                bookList.add(book);
+            }
         }
-        if (!libWorker.userBorrowThisBook(LoginCheck.userLogin, titleLabel.getText(), authorLabel.getText(), bookYearLabel.getText())) {
-            libWorker.giveNewBookUser(LoginCheck.userLogin, titleLabel.getText(), authorLabel.getText(), bookYearLabel.getText());
-        } else Dialogs.showInfoDialog("Opps", "It's looks like you have already borrowed this book");
     }
 }

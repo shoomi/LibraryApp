@@ -19,9 +19,10 @@
             <TableColumn id="releaseYear" fx:id="borrowingDateColumn" prefWidth="182.0" text="Borrowing date" />
             </columns>
         </TableView>
-        <TextField fx:id="searchField" layoutX="731.0" layoutY="34.0" prefHeight="25.0" prefWidth="213.0" promptText="search" />
-      <Button fx:id="returnBookButton" layoutX="30.0" layoutY="34.0" mnemonicParsing="false" onAction="#returnBook" text="return book" />
-      <Label fx:id="titleLabel" layoutX="160.0" layoutY="38.0" prefHeight="17.0" prefWidth="164.0" text="Label" />
-      <Label fx:id="authorLabel" layoutX="383.0" layoutY="38.0" prefHeight="17.0" prefWidth="201.0" text="Label" />
+        <TextField fx:id="searchField" layoutX="731.0" layoutY="34.0" onAction="#searchBook" prefHeight="25.0" prefWidth="213.0" promptText="search" />
+      <Button fx:id="returnBookButton" defaultButton="true" layoutX="30.0" layoutY="34.0" mnemonicParsing="false" onAction="#returnBook" text="return book" />
+      <Label fx:id="titleLabel" layoutX="142.0" layoutY="14.0" prefHeight="17.0" prefWidth="414.0" />
+      <Label fx:id="authorLabel" layoutX="142.0" layoutY="37.0" prefHeight="17.0" prefWidth="414.0" />
+      <Label fx:id="bookYearLabel" layoutX="142.0" layoutY="59.0" prefHeight="17.0" prefWidth="90.0" />
     </children>
 </AnchorPane>

@@ -1,6 +1,7 @@
 package controllers;
 
 
+import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 
@@ -44,6 +45,7 @@ public class Controller {
     }
 
     public void exit(javafx.event.ActionEvent actionEvent) {
+        Platform.exit();
         System.exit(0);
     }
 }

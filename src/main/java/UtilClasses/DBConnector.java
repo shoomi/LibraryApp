@@ -13,7 +13,7 @@ public class DBConnector {
     private static final String PASS = "root";
     private static Connection connection;
 
-     {
+  static   {
 
         try {
             connection = DriverManager.getConnection(URL, USER, PASS);
@@ -21,7 +21,7 @@ public class DBConnector {
                 System.out.println("connection is established");
             }
         } catch (SQLException e) {
-            Dialogs.showErrorDialog("ERROR!!!","Can't connect to the server");
+            Dialogs.showErrorDialog("ERROR!!!", "Can't connect to the server");
         }
     }
 

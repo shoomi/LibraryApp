@@ -1,10 +1,13 @@
 package controllers;
 
+import Dialogs.Dialogs;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -24,6 +27,7 @@ public class ReturnBookController {
 
     @FXML
     public ObservableList<Book> bookList = FXCollections.observableArrayList();
+    public ObservableList<Book> backUpBookList = FXCollections.observableArrayList();
 
     @FXML
     public TableView<Book> tableBorrowingBooks;
@@ -53,6 +57,7 @@ public class ReturnBookController {
 
     LibWorker libWorker;
 
+
     public ReturnBookController() throws SQLException {
         libWorker = new LibWorker();
     }
@@ -66,8 +71,7 @@ public class ReturnBookController {
             stage.setMinWidth(500);
             stage.setResizable(false);
             stage.setScene(new Scene(root));
-            stage.initModality(Modality.WINDOW_MODAL);
-//            stage.initOwner(((Node) actionEvent.getSource()).getScene().getWindow());
+            stage.initModality(Modality.APPLICATION_MODAL);
             stage.show();
 
         } catch (IOException e) {
@@ -80,7 +84,7 @@ public class ReturnBookController {
     public void initialize() {
 
         try {
-            if (libWorker.doesUserBorrowBooks(LoginCheck.userLogin)) {
+            if (libWorker.haveUserSomethingToReturn(LoginCheck.userLogin)) {
 
                 loadDataFromDbIntoBookList();
 
@@ -91,6 +95,7 @@ public class ReturnBookController {
                 borrowingDateColumn.setCellValueFactory(new PropertyValueFactory<Book, String>("borrowingDate"));
 
                 tableBorrowingBooks.setItems(bookList);
+                backUpBookList.addAll(bookList);
                 mauseClicked();
             }
         } catch (SQLException e) {
@@ -116,6 +121,21 @@ public class ReturnBookController {
 
     }
 
+
+    public void returnBook(javafx.event.ActionEvent actionEvent) throws SQLException {
+        returnBookButton.setDefaultButton(true);
+        if (tableBorrowingBooks.getItems().size() > 0) {
+            libWorker.returnUserBook(LoginCheck.userLogin, titleLabel.getText(), authorLabel.getText(), bookYearLabel.getText());
+            Dialogs.showInfoDialog("Information", String.format("The book '%s' was returned! Thanks", titleLabel.getText()));
+            titleLabel.setText("");
+            authorLabel.setText("");
+            bookYearLabel.setText("");
+            Book selectedItem = tableBorrowingBooks.getSelectionModel().getSelectedItem();
+            tableBorrowingBooks.getItems().remove(selectedItem);
+        } else Dialogs.showInfoDialog("Information", "You have nothing to return");
+
+    }
+
     private void mauseClicked() {
         tableBorrowingBooks.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -129,11 +149,15 @@ public class ReturnBookController {
         });
     }
 
-
-    public void returnBook(javafx.event.ActionEvent actionEvent) throws SQLException {
-
-        libWorker.returnUserBook(LoginCheck.userLogin, titleLabel.getText(), authorLabel.getText(), bookYearLabel.getText());
-
+    public void searchBook(ActionEvent actionEvent) {
+        bookList.clear();
+        for (Book book : backUpBookList) {
+            if (book.getTitle().toLowerCase().contains(searchField.getText().toLowerCase()) ||
+                    book.getAuthor().toLowerCase().contains(searchField.getText().toLowerCase()) ||
+                    book.getReleaseDate().toLowerCase().contains(searchField.getText())) {
+                bookList.add(book);
+            }
+        }
     }
 
 }

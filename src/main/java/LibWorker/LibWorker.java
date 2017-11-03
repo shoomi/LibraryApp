@@ -129,16 +129,15 @@ public class LibWorker {
                 "                                                        WHERE\n" +
                 "                                                          title = '%s' AND author = '%s' AND\n" +
                 "                                                          release_date = '%s') and returning_date is NULL", new Util().getCurrentTime(), userLogin, bookTitle, bookAuthor, booksYearRelese));
-        statement.close();
+//        statement.close();
     }
 
 
-    public boolean doesUserBorrowBooks(String userLogin) throws SQLException {
+    public boolean haveUserSomethingToReturn(String userLogin) throws SQLException {
 
-        String query = String.format("SELECT borrowing_date\n" +
-                "FROM ((borrowings\n" +
-                "  INNER JOIN books ON borrowings.book_id = books.book_id)\n" +
-                "  INNER JOIN users ON borrowings.user_id = users.user_id)\n" +
+        String query = String.format("SELECT book_id\n" +
+                "FROM borrowings\n" +
+                "  INNER JOIN users ON borrowings.user_id = users.user_id\n" +
                 "WHERE (users.login = '%s') AND returning_date IS NULL", userLogin);
         ResultSet rs = statement.executeQuery(query);
         if (rs.next()) {
