@@ -80,7 +80,7 @@ public class FormValidadtion {
     }
 
     public static boolean numberOfBooksIsValide(TextField numberOfBooks, Label l, String sVelidationText) {
-        if (numberOfBooks.getText().chars().allMatch(Character::isDigit) && Integer.parseInt(numberOfBooks.getText()) != 0) {
+        if (numberOfBooks.getText().chars().allMatch(Character::isDigit) && Integer.parseInt(numberOfBooks.getText()) > 0) {
             l.setText(null);
             return true;
         }

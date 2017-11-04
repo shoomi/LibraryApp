@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 public class LoginCheck {
+
     public TextField loginCheckField;
     public Label loginCheckLabel;
     public static String userLogin;
@@ -45,7 +46,7 @@ public class LoginCheck {
 
         userLogin = loginCheckField.getText();
 
-        switch (Controller.someOperationsButtonId) {
+        switch (MainController.someOperationsButtonId) {
 
             case "takeBook":
 
@@ -54,14 +55,11 @@ public class LoginCheck {
                     if (new LibWorker().loginIsValidated(userLogin)) {
 
                         new TakeBookController().showTakeBookWindow(actionEvent);
-
-                        Node source = (Node) actionEvent.getSource();
-                        Stage stage = (Stage) source.getScene().getWindow();
-                        stage.close();
+                        closeLoginStage(actionEvent);
 
                     } else Dialogs.showInfoDialog("Information", "The login '" + userLogin + "' is not registered");
-                    loginCheckLabel.setText("this login is not registered");
 
+                    loginCheckLabel.setText("this login is not registered");
 
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -77,22 +75,25 @@ public class LoginCheck {
                         if (new LibWorker().haveUserSomethingToReturn(userLogin)) {
 
                             new ReturnBookController().showReturnBookWindow(actionEvent);
-
-                            Node source = (Node) actionEvent.getSource();
-                            Stage stage = (Stage) source.getScene().getWindow();
-                            stage.close();
+                            closeLoginStage(actionEvent);
 
                         } else Dialogs.showInfoDialog("Information", "It's looks like you have nothing to return");
 
                     } else Dialogs.showInfoDialog("Information", "The login '" + userLogin + "' is not registered");
-                    loginCheckLabel.setText("this login is not registered");
 
+                    loginCheckLabel.setText("this login is not registered");
 
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
                 break;
         }
+    }
+
+    private void closeLoginStage(ActionEvent actionEvent) throws SQLException {
+        Node source = (Node) actionEvent.getSource();
+        Stage stage = (Stage) source.getScene().getWindow();
+        stage.close();
     }
 
 

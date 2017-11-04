@@ -25,9 +25,10 @@ import LibWorker.LibWorker;
 
 public class TakeBookController {
 
+    @FXML
     public ObservableList<Book> bookList = FXCollections.observableArrayList();
+    @FXML
     public ObservableList<Book> backUpBookList = FXCollections.observableArrayList();
-
 
     @FXML
     public TableView<Book> tableBooks;
@@ -58,7 +59,7 @@ public class TakeBookController {
         try {
             Stage stage = new Stage();
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/takeBook.fxml"));
-            stage.setTitle("Take book window");
+            stage.setTitle(String.format("The list of all available books in the library. You entered as '%s'",LoginCheck.userLogin));
             stage.setMinHeight(300);
             stage.setMinWidth(500);
             stage.setResizable(false);

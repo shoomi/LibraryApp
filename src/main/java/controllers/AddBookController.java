@@ -5,7 +5,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Modality;
@@ -60,10 +59,10 @@ public class AddBookController {
 
     public void addBookToDb(javafx.event.ActionEvent actionEvent) {
 
-        if(bookValuesControl()){
+        if (bookValuesControl()) {
             try {
-                new RegBookInDb().addNewBook(titleField.getText(),authorField.getText(), yearBookField.getText(), Integer.parseInt(numberOfBooksField.getText()));
-                addingBookConfirmLabel.setText(String.format("The book '%s' '%s' was successfully added to database ",titleField.getText(),authorField.getText()));
+                new RegBookInDb().addNewBook(titleField.getText(), authorField.getText(), yearBookField.getText(), Integer.parseInt(numberOfBooksField.getText()));
+                addingBookConfirmLabel.setText(String.format("The book '%s' '%s' was successfully added to database ", titleField.getText(), authorField.getText()));
 
                 titleField.setText(null);
                 authorField.setText(null);
@@ -78,7 +77,7 @@ public class AddBookController {
 
     private boolean bookValuesControl() {
 
-        boolean yaerIsValid = false;
+        boolean yearIsValid = false;
         boolean amountOfBooksIsValid = false;
 
         boolean titleIsNotEmpty = FormValidadtion.textFieldNotEmpty(titleField, titleLabel, "enter Title");
@@ -87,13 +86,13 @@ public class AddBookController {
         boolean amountIsNotEmpty = FormValidadtion.textFieldNotEmpty(numberOfBooksField, numberOfBooksLabel, "enter number of books");
 
         if (yearIsNotEmpty) {
-            yaerIsValid = FormValidadtion.bookYearIsValid(yearBookField, yearBookLabel, "invalid value");
+            yearIsValid = FormValidadtion.bookYearIsValid(yearBookField, yearBookLabel, "invalid value");
         }
         if (amountIsNotEmpty) {
             amountOfBooksIsValid = FormValidadtion.numberOfBooksIsValide(numberOfBooksField, numberOfBooksLabel, "invalid value");
         }
 
-        return titleIsNotEmpty && authorIsNotEmpty && yearIsNotEmpty && amountIsNotEmpty && yaerIsValid && amountOfBooksIsValid;
+        return titleIsNotEmpty && authorIsNotEmpty && yearIsNotEmpty && amountIsNotEmpty && yearIsValid && amountOfBooksIsValid;
 
     }
 

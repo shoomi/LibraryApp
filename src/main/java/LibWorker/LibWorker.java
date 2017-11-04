@@ -20,25 +20,7 @@ public class LibWorker {
         statement = dbConnector.getConnection().createStatement();
     }
 
-    public void closeStatementAndConnection() throws SQLException {
-        statement.close();
-        dbConnector.closeConnection();
-    }
 
-    public void showAllFreeBooksFromDb() throws SQLException {
-        rs = statement.executeQuery("SELECT books.title,books.author, books.release_date\n" +
-                "FROM books\n" +
-                "WHERE book_id NOT IN(SELECT DISTINCT borrowings.book_id\n" +
-                "                 FROM borrowings\n" +
-                "                   INNER JOIN books ON borrowings.book_id = books.book_id\n" +
-                "                 WHERE ((SELECT count(book_id) FROM borrowings WHERE borrowings.book_id = books.book_id AND returning_date is NULL) = (SELECT stock FROM books WHERE books.book_id =borrowings.book_id)))");
-
-        while (rs.next()) {
-            System.out.println(String.format("%s,   %s,   %s", rs.getString("title"), rs.getString("author"), rs.getString("release_date")));
-        }
-    }
-
-    ////////////
     public ResultSet rsFreeBooksFromDb() throws SQLException {
         rs = statement.executeQuery("SELECT books.title,books.author, books.release_date\n" +
                 "FROM books\n" +
@@ -49,7 +31,6 @@ public class LibWorker {
         return rs;
     }
 
-    ////////
 
     public void addNewUserToDbUsers(User libUser) throws SQLException {
         String addNewUser = String.format("INSERT INTO  mylibrary.`users` (login, first_name, last_name, phone_number, date_of_birth) VALUES ('%s','%s', '%s', '%s', '%s')", libUser.getLogin(), libUser.getFirstName(), libUser.getLastName(), libUser.getTelephone(), libUser.dateOfBirthirth());
@@ -70,16 +51,6 @@ public class LibWorker {
         }
         rs.close();
         return false;
-    }
-
-    public int getIdBookByName(String bookName, String booksYearRelese) throws SQLException {
-        rs = statement.executeQuery(String.format("SELECT book_id FROM books WHERE title = '%s' AND books.release_date ='%s'", bookName, booksYearRelese));
-        int bookId = -1;
-        if (rs.next()) {
-            bookId = rs.getInt("book_id");
-        }
-        rs.close();
-        return bookId;
     }
 
 
@@ -109,7 +80,6 @@ public class LibWorker {
                 "                                                        WHERE\n" +
                 "                                                          title = '%s' AND author = '%s' AND\n" +
                 "                                                          release_date = '%s') and returning_date is NULL", new Util().getCurrentTime(), userLogin, bookTitle, bookAuthor, booksYearRelese));
-//        statement.close();
     }
 
 
@@ -126,7 +96,6 @@ public class LibWorker {
         return false;
     }
 
-    ////////////////
 
     public ResultSet rsUsersBooks(String userLogin) throws SQLException {
         String query = String.format("SELECT\n" +
@@ -138,11 +107,9 @@ public class LibWorker {
                 "  INNER JOIN books ON borrowings.book_id = books.book_id)\n" +
                 "  INNER JOIN users ON borrowings.user_id = users.user_id)\n" +
                 "WHERE (users.login = '%s') AND returning_date IS NULL", userLogin);
-        ResultSet rs = statement.executeQuery(query);
-        return rs;
+        return statement.executeQuery(query);
     }
 
-    ///////////////
 
     public boolean userBorrowThisBook(String userLogin, String bookTitle, String bookAuthor, String booksYearRelese) throws SQLException {
         String query = String.format("SELECT borrowing_date\n" +
@@ -158,7 +125,20 @@ public class LibWorker {
         return false;
     }
 
-    public void deleteUserWithId(int userId) throws SQLException {
-        statement.execute(String.format("DELETE FROM users WHERE user_id = '%d'", userId));
-    }
+//    public void deleteUserWithId(int userId) throws SQLException {
+//        statement.execute(String.format("DELETE FROM users WHERE user_id = '%d'", userId));
+//    }
+
+    //    public void showAllFreeBooksFromDb() throws SQLException {
+//        rs = statement.executeQuery("SELECT books.title,books.author, books.release_date\n" +
+//                "FROM books\n" +
+//                "WHERE book_id NOT IN(SELECT DISTINCT borrowings.book_id\n" +
+//                "                 FROM borrowings\n" +
+//                "                   INNER JOIN books ON borrowings.book_id = books.book_id\n" +
+//                "                 WHERE ((SELECT count(book_id) FROM borrowings WHERE borrowings.book_id = books.book_id AND returning_date is NULL) = (SELECT stock FROM books WHERE books.book_id =borrowings.book_id)))");
+//
+//        while (rs.next()) {
+//            System.out.println(String.format("%s,   %s,   %s", rs.getString("title"), rs.getString("author"), rs.getString("release_date")));
+//        }
+//    }
 }

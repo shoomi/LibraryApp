@@ -27,6 +27,7 @@ public class ReturnBookController {
 
     @FXML
     public ObservableList<Book> bookList = FXCollections.observableArrayList();
+    @FXML
     public ObservableList<Book> backUpBookList = FXCollections.observableArrayList();
 
     @FXML
@@ -54,9 +55,7 @@ public class ReturnBookController {
     @FXML
     public Label bookYearLabel;
 
-
     LibWorker libWorker;
-
 
     public ReturnBookController() throws SQLException {
         libWorker = new LibWorker();
@@ -66,7 +65,7 @@ public class ReturnBookController {
         try {
             Stage stage = new Stage();
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/returnBook.fxml"));
-            stage.setTitle("Return the book");
+            stage.setTitle(String.format("The list of your borrowed books in our library. You entered as'%s'", LoginCheck.userLogin));
             stage.setMinHeight(300);
             stage.setMinWidth(500);
             stage.setResizable(false);
@@ -123,15 +122,20 @@ public class ReturnBookController {
 
 
     public void returnBook(javafx.event.ActionEvent actionEvent) throws SQLException {
-        returnBookButton.setDefaultButton(true);
+
         if (tableBorrowingBooks.getItems().size() > 0) {
+
             libWorker.returnUserBook(LoginCheck.userLogin, titleLabel.getText(), authorLabel.getText(), bookYearLabel.getText());
+
             Dialogs.showInfoDialog("Information", String.format("The book '%s' was returned! Thanks", titleLabel.getText()));
+
             titleLabel.setText("");
             authorLabel.setText("");
             bookYearLabel.setText("");
+
             Book selectedItem = tableBorrowingBooks.getSelectionModel().getSelectedItem();
             tableBorrowingBooks.getItems().remove(selectedItem);
+
         } else Dialogs.showInfoDialog("Information", "You have nothing to return");
 
     }

@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 public class RegUserInDb {
 
     public void addNewUser(String login, String firstName, String lastName, String telephone, String dateOfBirth) {
+
         User user = new User();
 
         user.setLogin(login);
@@ -27,18 +28,13 @@ public class RegUserInDb {
         user.setTelephone(telephone);
         user.setDate_of_birth(dateOfBirth);
 
-
         try {
             new LibWorker().addNewUserToDbUsers(user);
-            System.out.println("\nYou were successfully added to the database!");
 
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-//            dbConnector.closeConnection();
         }
     }
-
 
 
 }

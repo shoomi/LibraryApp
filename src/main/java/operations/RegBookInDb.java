@@ -3,6 +3,7 @@ package operations;
 import LibWorker.LibWorker;
 import UtilClasses.DBConnector;
 import userAndBookClasses.Book;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -37,6 +38,7 @@ public class RegBookInDb {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+//        new DBConnector().closeConnection();
     }
 
     private void addBookToExisting() throws SQLException {
