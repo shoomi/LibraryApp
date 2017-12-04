@@ -1,19 +1,21 @@
 package controllers;
 
-import FormValidations.FormValidadtion;
+import formvalidations.BookValuesControl;
+import javafx.event.ActionEvent;
+import operations.RegBookInDb;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.Node;
-import operations.RegBookInDb;
 
 import java.io.IOException;
-import java.sql.SQLException;
+
 
 public class AddBookController {
 
@@ -37,14 +39,15 @@ public class AddBookController {
     @FXML
     private Label addingBookConfirmLabel;
 
-    public void showAddBookToDbWindow(javafx.event.ActionEvent actionEvent) {
+
+    public void showAddBookToDbWindow(ActionEvent actionEvent) {
 
         try {
             Stage stage = new Stage();
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/addBook.fxml"));
             stage.setTitle("Register new book in Library");
-            stage.setMinHeight(300);
-            stage.setMinWidth(500);
+            stage.setMinHeight(180);
+            stage.setMinWidth(450);
             stage.setResizable(false);
             stage.setScene(new Scene(root));
             stage.initModality(Modality.WINDOW_MODAL);
@@ -59,41 +62,19 @@ public class AddBookController {
 
     public void addBookToDb(javafx.event.ActionEvent actionEvent) {
 
-        if (bookValuesControl()) {
-            try {
-                new RegBookInDb().addNewBook(titleField.getText(), authorField.getText(), yearBookField.getText(), Integer.parseInt(numberOfBooksField.getText()));
-                addingBookConfirmLabel.setText(String.format("The book '%s' '%s' was successfully added to database ", titleField.getText(), authorField.getText()));
+        addingBookConfirmLabel.setText(null);
 
-                titleField.setText(null);
-                authorField.setText(null);
-                yearBookField.setText(null);
-                numberOfBooksField.setText(null);
+        if (new BookValuesControl().checkValues(titleField, authorField, yearBookField, numberOfBooksField, titleLabel, authorLabel, numberOfBooksLabel, yearBookLabel)) {
 
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            new RegBookInDb().addNewBook(titleField.getText(), authorField.getText(), yearBookField.getText(), Integer.parseInt(numberOfBooksField.getText()));
+            addingBookConfirmLabel.setText(String.format("The book '%s' '%s' was successfully added to database ", titleField.getText(), authorField.getText()));
+
+            titleField.setText(null);
+            authorField.setText(null);
+            yearBookField.setText(null);
+            numberOfBooksField.setText(null);
         }
     }
 
-    private boolean bookValuesControl() {
-
-        boolean yearIsValid = false;
-        boolean amountOfBooksIsValid = false;
-
-        boolean titleIsNotEmpty = FormValidadtion.textFieldNotEmpty(titleField, titleLabel, "enter Title");
-        boolean authorIsNotEmpty = FormValidadtion.textFieldNotEmpty(authorField, authorLabel, "enter Author");
-        boolean yearIsNotEmpty = FormValidadtion.textFieldNotEmpty(yearBookField, yearBookLabel, "enter year in format YYYY");
-        boolean amountIsNotEmpty = FormValidadtion.textFieldNotEmpty(numberOfBooksField, numberOfBooksLabel, "enter number of books");
-
-        if (yearIsNotEmpty) {
-            yearIsValid = FormValidadtion.bookYearIsValid(yearBookField, yearBookLabel, "invalid value");
-        }
-        if (amountIsNotEmpty) {
-            amountOfBooksIsValid = FormValidadtion.numberOfBooksIsValide(numberOfBooksField, numberOfBooksLabel, "invalid value");
-        }
-
-        return titleIsNotEmpty && authorIsNotEmpty && yearIsNotEmpty && amountIsNotEmpty && yearIsValid && amountOfBooksIsValid;
-
-    }
 
 }

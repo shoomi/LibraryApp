@@ -1,8 +1,9 @@
 package controllers;
 
-import Dialogs.Dialogs;
+import dialogs.Dialogs;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -11,59 +12,56 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import userAndBookClasses.Book;
+import operations.ReturnBook;
+import search.BooksSearch;
+import search.Search;
+import libraryitem.Book;
 
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import LibWorker.LibWorker;
+import libWorker.LibWorker;
+
 
 public class ReturnBookController {
 
-    @FXML
-    public ObservableList<Book> bookList = FXCollections.observableArrayList();
-    @FXML
-    public ObservableList<Book> backUpBookList = FXCollections.observableArrayList();
+    private ObservableList<Book> borrowedBooksList;
+
+    private FilteredList<Book> filteredBorrowedBooksList;
 
     @FXML
-    public TableView<Book> tableBorrowingBooks;
+    private TableView<Book> tableBorrowingBooks;
     @FXML
-    public TableColumn<Book, Integer> nnColumn;
+    private TableColumn<Book, String> sequenceNumberColumn;
     @FXML
-    public TableColumn<Book, String> titleColumn;
+    private TableColumn<Book, String> titleColumn;
     @FXML
-    public TableColumn<Book, String> authorColumn;
+    private TableColumn<Book, String> authorColumn;
     @FXML
-    public TableColumn<Book, String> releaseYearColumn;
+    private TableColumn<Book, String> releaseYearColumn;
     @FXML
-    public TableColumn<Book, String> borrowingDateColumn;
+    private TableColumn<Book, String> borrowingDateColumn;
 
     @FXML
-    public TextField searchField;
-    @FXML
-    public Button returnBookButton;
+    private TextField searchField;
 
     @FXML
-    public Label titleLabel;
+    private Label titleLabel;
     @FXML
-    public Label authorLabel;
+    private Label authorLabel;
     @FXML
-    public Label bookYearLabel;
+    private Label bookYearLabel;
 
-    LibWorker libWorker;
-
-    public ReturnBookController() throws SQLException {
-        libWorker = new LibWorker();
-    }
+    private Stage stage;
 
     public void showReturnBookWindow(javafx.event.ActionEvent actionEvent) {
+
         try {
-            Stage stage = new Stage();
+            stage = new Stage();
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/returnBook.fxml"));
             stage.setTitle(String.format("The list of your borrowed books in our library. You entered as'%s'", LoginCheck.userLogin));
             stage.setMinHeight(300);
@@ -73,6 +71,8 @@ public class ReturnBookController {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.show();
 
+            getStageSource(actionEvent);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -80,88 +80,67 @@ public class ReturnBookController {
 
 
     @FXML
-    public void initialize() {
+    public void initialize() throws SQLException {
 
-        try {
-            if (libWorker.haveUserSomethingToReturn(LoginCheck.userLogin)) {
+        loadFromDb();
 
-                loadDataFromDbIntoBookList();
+        sequenceNumberColumn.setCellValueFactory(cellData -> cellData.getValue().sequenceNumberProperty());
+        titleColumn.setCellValueFactory(cellData -> cellData.getValue().titleProperty());
+        authorColumn.setCellValueFactory(cellData -> cellData.getValue().authorProperty());
+        releaseYearColumn.setCellValueFactory(cellData -> cellData.getValue().releaseYearProperty());
+        borrowingDateColumn.setCellValueFactory(cellData -> cellData.getValue().borrowingDateProperty());
 
-                nnColumn.setCellValueFactory(new PropertyValueFactory<Book, Integer>("nn"));
-                titleColumn.setCellValueFactory(new PropertyValueFactory<Book, String>("title"));
-                authorColumn.setCellValueFactory(new PropertyValueFactory<Book, String>("author"));
-                releaseYearColumn.setCellValueFactory(new PropertyValueFactory<Book, String>("releaseDate"));
-                borrowingDateColumn.setCellValueFactory(new PropertyValueFactory<Book, String>("borrowingDate"));
-
-                tableBorrowingBooks.setItems(bookList);
-                backUpBookList.addAll(bookList);
-                mauseClicked();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        tableBorrowingBooks.setItems(borrowedBooksList);
+        mouseClick();
     }
 
 
-    public void loadDataFromDbIntoBookList() {
+    private void loadFromDb() throws SQLException {
 
-        try {
-            int nn = 1;
-            ResultSet rs = libWorker.rsUsersBooks(LoginCheck.userLogin);
-            while (rs.next()) {
-                bookList.add(new Book(nn, rs.getString("title"), rs.getString("author"), rs.getString("release_date"), rs.getString("borrowing_date")));
-                nn++;
-            }
-            rs.close();
+        borrowedBooksList = FXCollections.observableArrayList();
+        filteredBorrowedBooksList = new FilteredList<>(borrowedBooksList, e -> true);
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if (!new LibWorker().loadDataFromDbIntoBookListToReturn(borrowedBooksList)) {
+            Dialogs.showInfoDialog("Information", "You have nothing to return");
         }
-
     }
-
 
     public void returnBook(javafx.event.ActionEvent actionEvent) throws SQLException {
 
-        if (tableBorrowingBooks.getItems().size() > 0) {
+        if (tableBorrowingBooks.getItems().size() == 0) {
+            Dialogs.showInfoDialog("Info", "You have successfully returned all books!");
+            getStageSource(actionEvent);
+            stage.close();
+        } else {
+            new ReturnBook().returnTheBook(titleLabel, authorLabel, bookYearLabel, tableBorrowingBooks,borrowedBooksList);
 
-            libWorker.returnUserBook(LoginCheck.userLogin, titleLabel.getText(), authorLabel.getText(), bookYearLabel.getText());
-
-            Dialogs.showInfoDialog("Information", String.format("The book '%s' was returned! Thanks", titleLabel.getText()));
-
-            titleLabel.setText("");
-            authorLabel.setText("");
-            bookYearLabel.setText("");
-
-            Book selectedItem = tableBorrowingBooks.getSelectionModel().getSelectedItem();
-            tableBorrowingBooks.getItems().remove(selectedItem);
-
-        } else Dialogs.showInfoDialog("Information", "You have nothing to return");
-
+        }
     }
 
-    private void mauseClicked() {
+
+    private void mouseClick() {
         tableBorrowingBooks.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 if (event.getClickCount() == 2) {
                     titleLabel.setText(tableBorrowingBooks.getSelectionModel().getSelectedItem().getTitle());
                     authorLabel.setText(tableBorrowingBooks.getSelectionModel().getSelectedItem().getAuthor());
-                    bookYearLabel.setText(tableBorrowingBooks.getSelectionModel().getSelectedItem().getReleaseDate());
+                    bookYearLabel.setText(tableBorrowingBooks.getSelectionModel().getSelectedItem().getReleaseYear());
                 }
             }
         });
     }
 
-    public void searchBook(ActionEvent actionEvent) {
-        bookList.clear();
-        for (Book book : backUpBookList) {
-            if (book.getTitle().toLowerCase().contains(searchField.getText().toLowerCase()) ||
-                    book.getAuthor().toLowerCase().contains(searchField.getText().toLowerCase()) ||
-                    book.getReleaseDate().toLowerCase().contains(searchField.getText())) {
-                bookList.add(book);
-            }
-        }
+
+    private void getStageSource(ActionEvent actionEvent) {
+        Node source = (Node) actionEvent.getSource();
+        stage = (Stage) source.getScene().getWindow();
     }
 
+
+    public void searchBorrowedBook(KeyEvent keyEvent) {
+        Search searchBorrowedBook = new BooksSearch();
+        searchBorrowedBook.search(searchField, filteredBorrowedBooksList, tableBorrowingBooks);
+
+    }
 }

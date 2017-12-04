@@ -3,18 +3,20 @@ package controllers;
 import javafx.application.Platform;
 import javafx.scene.control.MenuItem;
 
+import java.io.IOException;
+import java.sql.SQLException;
+
+
 public class MainController {
 
     public static String someOperationsButtonId;
 
-    public void addNewBook(javafx.event.ActionEvent actionEvent) {
-
-        new AddBookController().showAddBookToDbWindow(actionEvent);
+    public void addNewBook(javafx.event.ActionEvent actionEvent) throws SQLException, IOException {
+       new AddBookController().showAddBookToDbWindow(actionEvent);
     }
 
 
-    public void addNewUser(javafx.event.ActionEvent actionEvent) {
-
+    public void addNewUser(javafx.event.ActionEvent actionEvent) throws SQLException {
         new AddUserController().showAddUserToDbWindow(actionEvent);
     }
 

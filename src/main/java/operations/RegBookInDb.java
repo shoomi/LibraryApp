@@ -1,62 +1,35 @@
 package operations;
 
-import LibWorker.LibWorker;
-import UtilClasses.DBConnector;
-import userAndBookClasses.Book;
+import libWorker.LibWorker;
+import libraryitem.LibBook;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-
 
 public class RegBookInDb {
-
-    Statement statement;
-    private Book book;
-
-    public RegBookInDb() throws SQLException {
-        book = new Book();
-        statement = new DBConnector().getConnection().createStatement();
-    }
 
 
     public void addNewBook(String title, String author, String releaseYear, int numberOfBooks) {
 
+        LibBook libBook = new LibBook();
+        LibWorker libWorker = new LibWorker();
+
         try {
 
-            book.setTitle(title);
-            book.setAuthor(author);
-            book.setReleaseDate(releaseYear);
-            book.setStock(numberOfBooks);
+            libBook.setTitle(title);
+            libBook.setAuthor(author);
+            libBook.setReleaseYear(releaseYear);
+            libBook.setStock(numberOfBooks);
 
-            if (!isBookExist()) {
-                new LibWorker().addNewBookToDbBooks(book);
+            if (!libWorker.doesBookExist(libBook)) {
+                libWorker.addNewBookToDbBooks(libBook);
             } else {
-                addBookToExisting();
+                libWorker.addBookToExisting(libBook);
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-//        new DBConnector().closeConnection();
     }
 
-    private void addBookToExisting() throws SQLException {
-
-        statement.executeUpdate(String.format("UPDATE mylibrary.books SET stock = stock + %d " +
-                        "WHERE books.title = '%s' AND books.author = '%s' and release_date = '%s'",
-                book.getStock(), book.getTitle(), book.getAuthor(), book.getReleaseDate()));
-        statement.close();
-
-    }
-
-    private boolean isBookExist() throws SQLException {
-        ResultSet rs = statement.executeQuery(String.format("SELECT books.title FROM books WHERE books.title = '%s' AND books.author = '%s' " +
-                "AND release_date = '%s'", book.getTitle(), book.getAuthor(), book.getReleaseDate()));
-        if (rs.next()) {
-            return true;
-        }
-        return false;
-    }
 
 }

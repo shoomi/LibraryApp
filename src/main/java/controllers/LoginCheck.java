@@ -1,8 +1,9 @@
 package controllers;
 
-import Dialogs.Dialogs;
-import LibWorker.LibWorker;
+import dialogs.Dialogs;
+import libWorker.LibWorker;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -18,10 +19,20 @@ import java.sql.SQLException;
 
 public class LoginCheck {
 
-    public TextField loginCheckField;
-    public Label loginCheckLabel;
+    @FXML
+    private TextField loginCheckField;
+    @FXML
+    private Label loginCheckLabel;
+
     public static String userLogin;
+    @FXML
     public Button loginCheckButton;
+
+    private LibWorker libWorker;
+
+    public LoginCheck() {
+        libWorker = new LibWorker();
+    }
 
     public void showLoginCheckWindow(ActionEvent actionEvent) {
 
@@ -29,8 +40,8 @@ public class LoginCheck {
             Stage stage = new Stage();
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/loginCheck.fxml"));
             stage.setTitle("Login Check");
-            stage.setMinHeight(300);
-            stage.setMinWidth(500);
+            stage.setMinHeight(200);
+            stage.setMinWidth(400);
             stage.setResizable(false);
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -52,7 +63,7 @@ public class LoginCheck {
 
                 try {
 
-                    if (new LibWorker().loginIsValidated(userLogin)) {
+                    if (libWorker.loginIsValidated(userLogin)) {
 
                         new TakeBookController().showTakeBookWindow(actionEvent);
                         closeLoginStage(actionEvent);
@@ -69,19 +80,17 @@ public class LoginCheck {
             case "returnBook":
 
                 try {
+                    ReturnBookController returnBookController = new ReturnBookController();
 
-                    if (new LibWorker().loginIsValidated(userLogin)) {
+                    if (libWorker.loginIsValidated(userLogin)) {
 
-                        if (new LibWorker().haveUserSomethingToReturn(userLogin)) {
+                        returnBookController.showReturnBookWindow(actionEvent);
+                        closeLoginStage(actionEvent);
 
-                            new ReturnBookController().showReturnBookWindow(actionEvent);
-                            closeLoginStage(actionEvent);
-
-                        } else Dialogs.showInfoDialog("Information", "It's looks like you have nothing to return");
-
-                    } else Dialogs.showInfoDialog("Information", "The login '" + userLogin + "' is not registered");
-
-                    loginCheckLabel.setText("this login is not registered");
+                    } else {
+                        Dialogs.showInfoDialog("Information", "The login '" + userLogin + "' is not registered");
+                        loginCheckLabel.setText("this login is not registered");
+                    }
 
                 } catch (SQLException e) {
                     e.printStackTrace();

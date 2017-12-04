@@ -1,11 +1,9 @@
-package FormValidations;
+package formvalidations;
 
-import UtilClasses.DBConnector;
-import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
+import utils.connection.DBConnector;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -14,44 +12,44 @@ import java.text.SimpleDateFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class FormValidadtion {
+public class FormValidation {
 
-    public static boolean textFieldNotEmpty(TextField text, Label l, String sVelidationText) {
+    public static boolean textFieldNotEmpty(TextField text, Label label, String sValidationText) {
         if (text.getText() != null && !text.getText().isEmpty()) {
-            l.setText(null);
+            label.setText(null);
             return true;
         }
-        l.setText(sVelidationText);
+        label.setText(sValidationText);
         System.out.println("IS EMPTY");
         return false;
     }
 
-    public static boolean telephoneIsValid(TextField tel, Label l, String sVelidationText) {
+    public static boolean telephoneIsValid(TextField tel, Label label, String sValidationText) {
 
         Pattern pattern = Pattern.compile("\\d{3}-\\d{7}");
         Matcher matcher = pattern.matcher(tel.getText());
         if (matcher.matches()) {
-            l.setText(null);
+            label.setText(null);
             return true;
         }
-        l.setText(sVelidationText);
+        label.setText(sValidationText);
         return false;
 
     }
 
-    public static boolean dateIsValide(TextField date, Label l, String sVelidationText) {
+    public static boolean dateIsValid(TextField date, Label label, String sValidationText) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
             sdf.parse(date.getText());
-            l.setText(null);
+            label.setText(null);
             return true;
         } catch (ParseException ex) {
-            l.setText(sVelidationText);
+            label.setText(sValidationText);
             return false;
         }
     }
 
-    public static boolean loginIsNotBusy(TextField login, Label l, String sVelidationText) {
+    public static boolean loginIsNotBusy(TextField login, Label label, String sValidationText) {
 
         DBConnector dbConnector = new DBConnector();
         try {
@@ -59,7 +57,7 @@ public class FormValidadtion {
             String query = "SELECT login FROM mylibrary.users where login='" + login.getText() + "'";
             ResultSet rs = statement.executeQuery(query);
             if (rs.next()) {
-                l.setText(sVelidationText);
+                label.setText(sValidationText);
                 return false;
             }
             rs.close();
@@ -70,21 +68,21 @@ public class FormValidadtion {
         return true;
     }
 
-    public static boolean bookYearIsValid(TextField bookYear, Label l, String sVelidationText) {
+    public static boolean bookYearIsValid(TextField bookYear, Label label, String sValidationText) {
         if (bookYear.getText().length() == 4 && bookYear.getText().chars().allMatch(Character::isDigit)) {
-            l.setText(null);
+            label.setText(null);
             return true;
         }
-        l.setText(sVelidationText);
+        label.setText(sValidationText);
         return false;
     }
 
-    public static boolean numberOfBooksIsValide(TextField numberOfBooks, Label l, String sVelidationText) {
+    public static boolean numberOfBooksIsValid(TextField numberOfBooks, Label label, String sValidationText) {
         if (numberOfBooks.getText().chars().allMatch(Character::isDigit) && Integer.parseInt(numberOfBooks.getText()) > 0) {
-            l.setText(null);
+            label.setText(null);
             return true;
         }
-        l.setText(sVelidationText);
+        label.setText(sValidationText);
         return false;
     }
 

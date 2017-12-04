@@ -1,26 +1,17 @@
 package operations;
 
-import LibWorker.LibWorker;
-import UtilClasses.DBConnector;
-import userAndBookClasses.User;
 
-import java.awt.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.sql.ResultSet;
+import libraryitem.LibUser;
+import libWorker.LibWorker;
+import libraryitem.User;
+
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class RegUserInDb {
 
     public void addNewUser(String login, String firstName, String lastName, String telephone, String dateOfBirth) {
 
-        User user = new User();
+        User user = new LibUser();
 
         user.setLogin(login);
         user.setFirstName(firstName);

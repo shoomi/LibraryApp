@@ -1,6 +1,10 @@
 package controllers;
 
-import Dialogs.Dialogs;
+import dialogs.Dialogs;
+import javafx.collections.transformation.FilteredList;
+import javafx.scene.Node;
+import javafx.scene.input.KeyEvent;
+import libWorker.LibWorker;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -10,147 +14,127 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import userAndBookClasses.Book;
+import search.BooksSearch;
+import search.Search;
+import libraryitem.Book;
 
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
 
-import LibWorker.LibWorker;
+import operations.TakeBook;
 
 public class TakeBookController {
 
-    @FXML
-    public ObservableList<Book> bookList = FXCollections.observableArrayList();
-    @FXML
-    public ObservableList<Book> backUpBookList = FXCollections.observableArrayList();
+    private ObservableList<Book> booksList;
+    private FilteredList<Book> filteredBooksList;
 
     @FXML
-    public TableView<Book> tableBooks;
+    private TableView<Book> tableBooks;
     @FXML
-    public TableColumn<Book, Integer> nnColumn;
+    private TableColumn<Book, String> sequenceNumberColumn;
     @FXML
-    public TableColumn<Book, String> titleColumn;
+    private TableColumn<Book, String> titleColumn;
     @FXML
-    public TableColumn<Book, String> authorColumn;
+    private TableColumn<Book, String> authorColumn;
     @FXML
-    public TableColumn<Book, String> releaseYearColumn;
+    private TableColumn<Book, String> releaseYearColumn;
 
     @FXML
-    public TextField searchField;
-    @FXML
-    public Button takeBookButton;
+    private TextField searchField;
 
     @FXML
-    public Label titleLabel;
+    private Label titleLabel;
     @FXML
-    public Label authorLabel;
+    private Label authorLabel;
     @FXML
-    public Label bookYearLabel;
+    private Label bookYearLabel;
 
+    private Stage stage;
 
     public void showTakeBookWindow(javafx.event.ActionEvent actionEvent) {
 
         try {
-            Stage stage = new Stage();
+            stage = new Stage();
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/takeBook.fxml"));
-            stage.setTitle(String.format("The list of all available books in the library. You entered as '%s'",LoginCheck.userLogin));
+            stage.setTitle(String.format("The list of all available books in the library. You entered as '%s'", LoginCheck.userLogin));
             stage.setMinHeight(300);
             stage.setMinWidth(500);
             stage.setResizable(false);
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.show();
+
+            getStageSource(actionEvent);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     @FXML
-    public void initialize() {
+    public void initialize() throws SQLException {
 
-        loadDataFromDbIntoBookList();
+        loadFromDb();
 
-        nnColumn.setCellValueFactory(new PropertyValueFactory<Book, Integer>("nn"));
-        titleColumn.setCellValueFactory(new PropertyValueFactory<Book, String>("title"));
-        authorColumn.setCellValueFactory(new PropertyValueFactory<Book, String>("author"));
-        releaseYearColumn.setCellValueFactory(new PropertyValueFactory<Book, String>("releaseDate"));
+        sequenceNumberColumn.setCellValueFactory(cellData -> cellData.getValue().sequenceNumberProperty());
+        titleColumn.setCellValueFactory(cellData -> cellData.getValue().titleProperty());
+        authorColumn.setCellValueFactory(cellData -> cellData.getValue().authorProperty());
+        releaseYearColumn.setCellValueFactory(cellData -> cellData.getValue().releaseYearProperty());
 
-        tableBooks.setItems(bookList);
-        backUpBookList.addAll(bookList);
-
-        mauseClicked();
+        tableBooks.setItems(booksList);
+        mouseClicked();
     }
 
 
-    public void loadDataFromDbIntoBookList() {
+    private void loadFromDb() throws SQLException {
 
-        try {
-            LibWorker libWorker = new LibWorker();
-            ResultSet rs = libWorker.rsFreeBooksFromDb();  /// select all free books from Db
-            int nn = 1;
-            while (rs.next()) {
-                bookList.add(new Book(nn, rs.getString("title"), rs.getString("author"), rs.getString("release_date")));
-                nn++;
-            }
-            rs.close();
-//            libWorker.closeStatementAndConnection();
+        booksList = FXCollections.observableArrayList();
+        filteredBooksList = new FilteredList<>(booksList, e -> true);
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if (!new LibWorker().loadDataFromDbIntoBookListToTake(booksList)) {
+            Dialogs.showInfoDialog("Info", "Sorry, but currently there is no books in our library");
         }
 
     }
 
 
-    public void takeBook(javafx.event.ActionEvent actionEvent) throws SQLException {
-        LibWorker libWorker = new LibWorker();
+    public void takeBook(javafx.event.ActionEvent actionEvent) {
 
-        if (titleLabel.getText().equals("")) {
-            Dialogs.showInfoDialog("Hey", "Make your choice");
+        if (tableBooks.getItems().size() == 0) {
+            Dialogs.showInfoDialog("Information", "Sorry, but you've took all free books");
+            getStageSource(actionEvent);
+            stage.close();
+        } else {
+            new TakeBook().takeBook(titleLabel, authorLabel, bookYearLabel, tableBooks, booksList);
         }
-        if (!libWorker.userBorrowThisBook(LoginCheck.userLogin, titleLabel.getText(), authorLabel.getText(), bookYearLabel.getText())) {
-
-            libWorker.giveNewBookUser(LoginCheck.userLogin, titleLabel.getText(), authorLabel.getText(), bookYearLabel.getText());
-            Dialogs.showInfoDialog("Information", String.format("The book '%s' is yours! Nice reading", titleLabel.getText()));
-            titleLabel.setText("");
-            authorLabel.setText("");
-            bookYearLabel.setText("");
-
-            Book selectedItem = tableBooks.getSelectionModel().getSelectedItem();
-            tableBooks.getItems().remove(selectedItem);
-
-        } else Dialogs.showInfoDialog("Opps", "It's looks like you have already borrowed this book");
     }
 
-
-    private void mauseClicked() {
+    private void mouseClicked() {
         tableBooks.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 if (event.getClickCount() == 2) {
                     titleLabel.setText(tableBooks.getSelectionModel().getSelectedItem().getTitle());
                     authorLabel.setText(tableBooks.getSelectionModel().getSelectedItem().getAuthor());
-                    bookYearLabel.setText(tableBooks.getSelectionModel().getSelectedItem().getReleaseDate());
+                    bookYearLabel.setText(tableBooks.getSelectionModel().getSelectedItem().getReleaseYear());
                 }
             }
         });
     }
 
 
-    public void searchBook(ActionEvent actionEvent) {
-        bookList.clear();
-        for (Book book : backUpBookList) {
-            if (book.getTitle().toLowerCase().contains(searchField.getText().toLowerCase()) ||
-                    book.getAuthor().toLowerCase().contains(searchField.getText().toLowerCase()) ||
-                    book.getReleaseDate().toLowerCase().contains(searchField.getText())) {
-                bookList.add(book);
-            }
-        }
+    private void getStageSource(ActionEvent actionEvent) {
+        Node source = (Node) actionEvent.getSource();
+        stage = (Stage) source.getScene().getWindow();
     }
+
+
+    public void searchTheBook(KeyEvent keyEvent) {
+        Search searchBorrowedBook = new BooksSearch();
+        searchBorrowedBook.search(searchField, filteredBooksList, tableBooks);
+    }
+
+
 }
