@@ -3,7 +3,7 @@ package search;
 import javafx.collections.transformation.FilteredList;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import libraryitem.Book;
+import libitems.Book;
 
 
 public interface Search {

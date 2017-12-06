@@ -1,7 +1,6 @@
 package controllers;
 
-import dialogs.Dialogs;
-import libWorker.LibWorker;
+import formvalidations.LoginValidation;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,24 +14,29 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 public class LoginCheck {
 
     @FXML
-    private TextField loginCheckField;
+    private TextField loginField;
     @FXML
-    private Label loginCheckLabel;
+    public TextField passwordField;
+    @FXML
+    private Label loginLabel;
+    @FXML
+    public Label passwordLabel;
+
+    @FXML
+    public Button loginButton;
 
     public static String userLogin;
-    @FXML
-    public Button loginCheckButton;
 
-    private LibWorker libWorker;
+    private LoginValidation loginValidation;
 
     public LoginCheck() {
-        libWorker = new LibWorker();
+        loginValidation = new LoginValidation();
     }
+
 
     public void showLoginCheckWindow(ActionEvent actionEvent) {
 
@@ -55,51 +59,32 @@ public class LoginCheck {
 
     public void checkLogin(ActionEvent actionEvent) {
 
-        userLogin = loginCheckField.getText();
+        userLogin = loginField.getText();
+        String userPassword = passwordField.getText();
 
         switch (MainController.someOperationsButtonId) {
 
             case "takeBook":
 
-                try {
-
-                    if (libWorker.loginIsValidated(userLogin)) {
-
-                        new TakeBookController().showTakeBookWindow(actionEvent);
-                        closeLoginStage(actionEvent);
-
-                    } else Dialogs.showInfoDialog("Information", "The login '" + userLogin + "' is not registered");
-
-                    loginCheckLabel.setText("this login is not registered");
-
-                } catch (SQLException e) {
-                    e.printStackTrace();
+                if (loginValidation.loginAndPasswordCheck(userLogin, loginLabel, userPassword, passwordLabel)) {
+                    new TakeBookController().showTakeBookWindow(actionEvent);
+                    closeLoginStage(actionEvent);
                 }
                 break;
 
             case "returnBook":
 
-                try {
-                    ReturnBookController returnBookController = new ReturnBookController();
+                if (loginValidation.loginAndPasswordCheck(userLogin, loginLabel, userPassword, passwordLabel)) {
 
-                    if (libWorker.loginIsValidated(userLogin)) {
+                    new ReturnBookController().showReturnBookWindow(actionEvent);
+                    closeLoginStage(actionEvent);
 
-                        returnBookController.showReturnBookWindow(actionEvent);
-                        closeLoginStage(actionEvent);
-
-                    } else {
-                        Dialogs.showInfoDialog("Information", "The login '" + userLogin + "' is not registered");
-                        loginCheckLabel.setText("this login is not registered");
-                    }
-
-                } catch (SQLException e) {
-                    e.printStackTrace();
                 }
                 break;
         }
     }
 
-    private void closeLoginStage(ActionEvent actionEvent) throws SQLException {
+    private void closeLoginStage(ActionEvent actionEvent) {
         Node source = (Node) actionEvent.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
         stage.close();

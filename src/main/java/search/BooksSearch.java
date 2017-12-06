@@ -4,8 +4,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import libraryitem.Book;
-import libraryitem.LibBook;
+import libitems.Book;
 
 import java.util.function.Predicate;
 
@@ -15,17 +14,20 @@ public class BooksSearch implements Search {
     public void search(TextField searchField, FilteredList filteredBooksList, TableView<Book> tableBorrowingBooks) {
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
 
+
             filteredBooksList.setPredicate((Predicate<? super Book>) book -> {
+
                 if (newValue == null || newValue.isEmpty()) {
                     return true;
                 }
 
                 String lowerCaseFilter = newValue.toLowerCase();
+
                 if (book.getTitle().toLowerCase().contains(lowerCaseFilter)) {
                     return true;
                 } else if (book.getAuthor().toLowerCase().contains(lowerCaseFilter)) {
                     return true;
-                } else if (book.getReleaseYear().toLowerCase().contains(lowerCaseFilter)){
+                } else if (book.getReleaseYear().toLowerCase().contains(lowerCaseFilter)) {
                     return true;
                 }
                 return false;

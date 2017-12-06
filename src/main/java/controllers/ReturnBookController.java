@@ -19,18 +19,16 @@ import javafx.stage.Stage;
 import operations.ReturnBook;
 import search.BooksSearch;
 import search.Search;
-import libraryitem.Book;
+import libitems.Book;
 
 import java.io.IOException;
 import java.sql.SQLException;
 
-import libWorker.LibWorker;
-
+import libworker.LibWorker;
 
 public class ReturnBookController {
 
     private ObservableList<Book> borrowedBooksList;
-
     private FilteredList<Book> filteredBorrowedBooksList;
 
     @FXML
@@ -56,12 +54,16 @@ public class ReturnBookController {
     @FXML
     private Label bookYearLabel;
 
-    private Stage stage;
+    private ReturnBook returnBook;
+
+    public ReturnBookController(){
+        returnBook = new ReturnBook();
+    }
 
     public void showReturnBookWindow(javafx.event.ActionEvent actionEvent) {
 
         try {
-            stage = new Stage();
+            Stage stage = new Stage();
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/returnBook.fxml"));
             stage.setTitle(String.format("The list of your borrowed books in our library. You entered as'%s'", LoginCheck.userLogin));
             stage.setMinHeight(300);
@@ -70,8 +72,6 @@ public class ReturnBookController {
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.show();
-
-            getStageSource(actionEvent);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -82,7 +82,7 @@ public class ReturnBookController {
     @FXML
     public void initialize() throws SQLException {
 
-        loadFromDb();
+        loadFromDbToFillBorrowedBooksLists();
 
         sequenceNumberColumn.setCellValueFactory(cellData -> cellData.getValue().sequenceNumberProperty());
         titleColumn.setCellValueFactory(cellData -> cellData.getValue().titleProperty());
@@ -95,26 +95,21 @@ public class ReturnBookController {
     }
 
 
-    private void loadFromDb() throws SQLException {
+    private void loadFromDbToFillBorrowedBooksLists() throws SQLException {
 
         borrowedBooksList = FXCollections.observableArrayList();
         filteredBorrowedBooksList = new FilteredList<>(borrowedBooksList, e -> true);
 
-        if (!new LibWorker().loadDataFromDbIntoBookListToReturn(borrowedBooksList)) {
+        if (!new LibWorker().loadDataFromDbInBorrowedBooksList(borrowedBooksList)) {
             Dialogs.showInfoDialog("Information", "You have nothing to return");
         }
     }
 
-    public void returnBook(javafx.event.ActionEvent actionEvent) throws SQLException {
 
-        if (tableBorrowingBooks.getItems().size() == 0) {
-            Dialogs.showInfoDialog("Info", "You have successfully returned all books!");
-            getStageSource(actionEvent);
-            stage.close();
-        } else {
-            new ReturnBook().returnTheBook(titleLabel, authorLabel, bookYearLabel, tableBorrowingBooks,borrowedBooksList);
+    public void returnTheBook(javafx.event.ActionEvent actionEvent) throws SQLException {
 
-        }
+        returnBook.returnTheBook(titleLabel, authorLabel, bookYearLabel, tableBorrowingBooks, borrowedBooksList);
+
     }
 
 
@@ -131,16 +126,16 @@ public class ReturnBookController {
         });
     }
 
-
-    private void getStageSource(ActionEvent actionEvent) {
-        Node source = (Node) actionEvent.getSource();
-        stage = (Stage) source.getScene().getWindow();
-    }
-
-
     public void searchBorrowedBook(KeyEvent keyEvent) {
         Search searchBorrowedBook = new BooksSearch();
         searchBorrowedBook.search(searchField, filteredBorrowedBooksList, tableBorrowingBooks);
 
     }
+
+//    private void getStageSource(ActionEvent actionEvent) {
+//        Node source = (Node) actionEvent.getSource();
+//        stage = (Stage) source.getScene().getWindow();
+//    }
+
+
 }

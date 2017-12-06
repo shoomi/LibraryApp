@@ -2,12 +2,10 @@ package controllers;
 
 import dialogs.Dialogs;
 import javafx.collections.transformation.FilteredList;
-import javafx.scene.Node;
 import javafx.scene.input.KeyEvent;
-import libWorker.LibWorker;
+import libworker.LibWorker;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,7 +17,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import search.BooksSearch;
 import search.Search;
-import libraryitem.Book;
+import libitems.Book;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -52,12 +50,16 @@ public class TakeBookController {
     @FXML
     private Label bookYearLabel;
 
-    private Stage stage;
+    private TakeBook takeBook;
+
+    public TakeBookController (){
+        takeBook = new TakeBook();
+    }
 
     public void showTakeBookWindow(javafx.event.ActionEvent actionEvent) {
 
         try {
-            stage = new Stage();
+            Stage stage = new Stage();
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/takeBook.fxml"));
             stage.setTitle(String.format("The list of all available books in the library. You entered as '%s'", LoginCheck.userLogin));
             stage.setMinHeight(300);
@@ -67,7 +69,6 @@ public class TakeBookController {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.show();
 
-            getStageSource(actionEvent);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -76,7 +77,7 @@ public class TakeBookController {
     @FXML
     public void initialize() throws SQLException {
 
-        loadFromDb();
+        loadFromDbToFillBooksLists();
 
         sequenceNumberColumn.setCellValueFactory(cellData -> cellData.getValue().sequenceNumberProperty());
         titleColumn.setCellValueFactory(cellData -> cellData.getValue().titleProperty());
@@ -84,34 +85,29 @@ public class TakeBookController {
         releaseYearColumn.setCellValueFactory(cellData -> cellData.getValue().releaseYearProperty());
 
         tableBooks.setItems(booksList);
-        mouseClicked();
+        mouseClick();
     }
 
 
-    private void loadFromDb() throws SQLException {
+    private void loadFromDbToFillBooksLists() throws SQLException {
 
         booksList = FXCollections.observableArrayList();
         filteredBooksList = new FilteredList<>(booksList, e -> true);
 
-        if (!new LibWorker().loadDataFromDbIntoBookListToTake(booksList)) {
+        if (!new LibWorker().loadDataFromDbInBookList(booksList)) {
             Dialogs.showInfoDialog("Info", "Sorry, but currently there is no books in our library");
         }
 
     }
 
 
-    public void takeBook(javafx.event.ActionEvent actionEvent) {
+    public void takeTheBook(javafx.event.ActionEvent actionEvent) {
 
-        if (tableBooks.getItems().size() == 0) {
-            Dialogs.showInfoDialog("Information", "Sorry, but you've took all free books");
-            getStageSource(actionEvent);
-            stage.close();
-        } else {
-            new TakeBook().takeBook(titleLabel, authorLabel, bookYearLabel, tableBooks, booksList);
-        }
+        takeBook.takeBook(titleLabel, authorLabel, bookYearLabel, tableBooks, booksList);
+
     }
 
-    private void mouseClicked() {
+    private void mouseClick() {
         tableBooks.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -124,17 +120,19 @@ public class TakeBookController {
         });
     }
 
-
-    private void getStageSource(ActionEvent actionEvent) {
-        Node source = (Node) actionEvent.getSource();
-        stage = (Stage) source.getScene().getWindow();
-    }
-
-
     public void searchTheBook(KeyEvent keyEvent) {
         Search searchBorrowedBook = new BooksSearch();
         searchBorrowedBook.search(searchField, filteredBooksList, tableBooks);
     }
+
+
+//    private void getStageSource(ActionEvent actionEvent) {
+//        Node source = (Node) actionEvent.getSource();
+//        stage = (Stage) source.getScene().getWindow();
+//    }
+
+
+
 
 
 }

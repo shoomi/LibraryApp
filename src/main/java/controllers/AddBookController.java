@@ -39,6 +39,12 @@ public class AddBookController {
     @FXML
     private Label addingBookConfirmLabel;
 
+    private RegBookInDb regBookInDb;
+
+    public AddBookController (){
+        regBookInDb = new RegBookInDb();
+    }
+
 
     public void showAddBookToDbWindow(ActionEvent actionEvent) {
 
@@ -66,7 +72,7 @@ public class AddBookController {
 
         if (new BookValuesControl().checkValues(titleField, authorField, yearBookField, numberOfBooksField, titleLabel, authorLabel, numberOfBooksLabel, yearBookLabel)) {
 
-            new RegBookInDb().addNewBook(titleField.getText(), authorField.getText(), yearBookField.getText(), Integer.parseInt(numberOfBooksField.getText()));
+            regBookInDb.addNewBook(titleField.getText(), authorField.getText(), yearBookField.getText(), Integer.parseInt(numberOfBooksField.getText()));
             addingBookConfirmLabel.setText(String.format("The book '%s' '%s' was successfully added to database ", titleField.getText(), authorField.getText()));
 
             titleField.setText(null);

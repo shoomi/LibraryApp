@@ -1,3 +1,5 @@
+/*stylesheets="/styles/my.css"*/
+
 
 .button{
     -fx-color:blue;
@@ -7,8 +9,18 @@
     -fx-color:red;
 }
 
-/*#anchorPane {*/
-    /*-fx-background-color: #FFECB3;*/
-/*}*/
+#anchorPane {
+    -fx-background-image: url("/library.jpg");
+}
+
+#confirmFieldUser {
+    -fx-text-fill: #bf510d;
+    -fx-text-alignment: center;
+}
+
+.label {
+    -fx-text-fill: #b91515;
+}
+
 
 

@@ -1,12 +1,12 @@
-package libWorker;
+package libworker;
 
 import controllers.LoginCheck;
 import javafx.collections.ObservableList;
-import libraryitem.Book;
-import libraryitem.User;
+import libitems.Book;
+import libitems.User;
 import utils.connection.NewStatementConnector;
 import utils.Util;
-import libraryitem.LibBook;
+import libitems.LibBook;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -35,7 +35,7 @@ public class LibWorker {
 
 
     public void addNewUserToDbUsers(User libUser) throws SQLException {
-        String addNewUser = String.format("INSERT INTO  mylibrary.`users` (login, first_name, last_name, phone_number, date_of_birth) VALUES ('%s','%s', '%s', '%s', '%s')", libUser.getLogin(), libUser.getFirstName(), libUser.getLastName(), libUser.getTelephone(), libUser.dateOfBirth());
+        String addNewUser = String.format("INSERT INTO  mylibrary.`users` (login, first_name, last_name, phone_number, date_of_birth, password) VALUES ('%s','%s', '%s', '%s', '%s','%s' )", libUser.getLogin(), libUser.getFirstName(), libUser.getLastName(), libUser.getTelephone(), libUser.dateOfBirth(), libUser.getPassword());
         statement.execute(addNewUser);
     }
 
@@ -44,7 +44,7 @@ public class LibWorker {
         statement.execute(addNewBook);
     }
 
-    public boolean loginIsValidated(String userLogin) throws SQLException {
+    public boolean loginExists(String userLogin) throws SQLException {
         rs = statement.executeQuery(String.format("SELECT user_id FROM users WHERE login = '%s'", userLogin));
         if (rs.next()) {
             return true;
@@ -123,7 +123,7 @@ public class LibWorker {
         return rs.next();
     }
 
-    public boolean loadDataFromDbIntoBookListToTake(ObservableList<Book> booksList) throws SQLException {
+    public boolean loadDataFromDbInBookList(ObservableList<Book> booksList) throws SQLException {
         rs = rsFreeBooksFromDb();        /// select all free books from Db
         int sequenceNumber = 1;
         while (rs.next()) {
@@ -134,7 +134,7 @@ public class LibWorker {
         return sequenceNumber > 1;
     }
 
-    public boolean loadDataFromDbIntoBookListToReturn(ObservableList<Book> borrowedBooksList) throws SQLException {
+    public boolean loadDataFromDbInBorrowedBooksList(ObservableList<Book> borrowedBooksList) throws SQLException {
 
         int sequenceNumber = 1;
         rs = rsUsersBooks(LoginCheck.userLogin);
@@ -144,6 +144,16 @@ public class LibWorker {
         }
         rs.close();
         return sequenceNumber > 1;
+    }
+
+    public String getUserPassword(String login) throws SQLException {
+        String password = "";
+        statement.executeQuery(String.format("SELECT password FROM users WHERE login = '%s'", login));
+        rs = statement.getResultSet();
+        if (rs.next()) {
+            password = rs.getString("password");
+        }
+        return password;
     }
 
 }

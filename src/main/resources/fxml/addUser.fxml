@@ -6,33 +6,27 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="299.0" prefWidth="393.0" xmlns="http://javafx.com/javafx/9.0.1"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.AddUserController">
+<AnchorPane prefHeight="339.0" prefWidth="393.0" stylesheets="/styles/my.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.AddUserController">
 
     <children>
-        <TextField fx:id="firstNameField" layoutX="105.0" layoutY="70.0" prefHeight="25.0" prefWidth="174.0"
-                   promptText="Firs Name"/>
-        <TextField fx:id="lastNameField" layoutX="105.0" layoutY="111.0" prefHeight="25.0" prefWidth="174.0"
-                   promptText="Last Name"/>
-        <Button fx:id="saveUserButton" cancelButton="true" defaultButton="true" layoutX="172.0" layoutY="255.0"
-                mnemonicParsing="false" onAction="#addUserToDb" styleClass="button" text="Save"/>
-        <TextField fx:id="loginField" layoutX="105.0" layoutY="30.0" prefHeight="25.0" prefWidth="174.0"
-                   promptText="login"/>
-        <Label fx:id="telLabel" layoutX="289.0" layoutY="153.0" text="." textFill="#b91515"/>
-        <TextField fx:id="telephoneField" layoutX="105.0" layoutY="149.0" prefHeight="25.0" prefWidth="174.0"
-                   promptText="telephone"/>
-        <Label fx:id="loginLabel" layoutX="288.0" layoutY="34.0" text="." textFill="#b91515"/>
-        <Label fx:id="lastNameLabel" layoutX="289.0" layoutY="115.0" text="." textFill="#b91515"/>
-        <Label fx:id="firsNameLabel" layoutX="289.0" layoutY="74.0" text="." textFill="#b91515"/>
-        <Label fx:id="dateLabel" layoutX="289.0" layoutY="192.0" text="." textFill="#b91515"/>
-        <TextField fx:id="dateField" layoutX="105.0" layoutY="188.0" prefHeight="25.0" prefWidth="174.0"
-                   promptText="enter date in format yyyy-MM-dd"/>
-        <Label fx:id="addingConfirmLabel" layoutX="13.0" layoutY="226.0" prefHeight="20.0" prefWidth="368.0"
-               textAlignment="CENTER" textFill="#1ca497">
+        <TextField fx:id="firstNameField" layoutX="112.0" layoutY="110.0" prefHeight="25.0" prefWidth="174.0" promptText="Firs Name" />
+        <TextField fx:id="lastNameField" layoutX="112.0" layoutY="151.0" prefHeight="25.0" prefWidth="174.0" promptText="Last Name" />
+        <Button fx:id="saveUserButton" cancelButton="true" defaultButton="true" layoutX="179.0" layoutY="266.0" mnemonicParsing="false" onAction="#addUserToDb" styleClass="button" text="Save" />
+        <TextField fx:id="loginField" layoutX="112.0" layoutY="30.0" prefHeight="25.0" prefWidth="174.0" promptText="login" />
+        <Label fx:id="telLabel" layoutX="293.0" layoutY="192.0" text="." />
+        <TextField fx:id="telephoneField" layoutX="112.0" layoutY="189.0" prefHeight="25.0" prefWidth="174.0" promptText="telephone" />
+        <Label fx:id="loginLabel" layoutX="291.0" layoutY="34.0" text="." />
+        <Label fx:id="lastNameLabel" layoutX="293.0" layoutY="154.0" text="." />
+        <Label fx:id="firsNameLabel" layoutX="293.0" layoutY="113.0" text="." />
+        <Label fx:id="dateLabel" layoutX="293.0" layoutY="231.0" text="." />
+        <TextField fx:id="dateField" layoutX="112.0" layoutY="228.0" prefHeight="25.0" prefWidth="174.0" promptText="date in format yyyy-MM-dd" />
+        <Label id="confirmFieldUser" fx:id="addingConfirmLabel" layoutX="20.0" layoutY="302.0" prefHeight="20.0" prefWidth="360.0">
             <font>
-                <Font size="14.0"/>
+                <Font size="14.0" />
             </font>
         </Label>
+      <TextField fx:id="passwordField" layoutX="112.0" layoutY="70.0" prefHeight="25.0" prefWidth="174.0" promptText="password" />
+      <Label fx:id="passwordLabel" layoutX="291.0" layoutY="74.0" text="." />
     </children>
 
 </AnchorPane>

@@ -1,17 +1,21 @@
 package operations;
 
-import libWorker.LibWorker;
-import libraryitem.LibBook;
+import libworker.LibWorker;
+import libitems.LibBook;
 
 import java.sql.SQLException;
 
 public class RegBookInDb {
 
+    private LibWorker libWorker;
+
+    public RegBookInDb() {
+        libWorker = new LibWorker();
+    }
 
     public void addNewBook(String title, String author, String releaseYear, int numberOfBooks) {
 
         LibBook libBook = new LibBook();
-        LibWorker libWorker = new LibWorker();
 
         try {
 

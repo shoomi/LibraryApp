@@ -2,22 +2,29 @@ package operations;
 
 import dialogs.Dialogs;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.scene.control.TableView;
-import libWorker.LibWorker;
+import libworker.LibWorker;
 import controllers.LoginCheck;
 import javafx.scene.control.Label;
-import libraryitem.Book;
-import libraryitem.LibBook;
+import libitems.Book;
+import libitems.LibBook;
 
+import java.security.SecureRandom;
 import java.sql.SQLException;
 
 public class TakeBook {
 
+    private LibWorker libWorker;
+
+    public TakeBook() {
+        System.out.println("TTTAAAAKKKEEEE");
+        libWorker = new LibWorker();
+    }
+
     private boolean giveThisBook(Label titleLabel, Label authorLabel, Label bookYearLabel) {
 
         try {
-            LibWorker libWorker = new LibWorker();
+
             if (!libWorker.userBorrowThisBook(LoginCheck.userLogin, titleLabel.getText(), authorLabel.getText(), bookYearLabel.getText())) {
 
                 libWorker.giveNewBookToUser(LoginCheck.userLogin, titleLabel.getText(), authorLabel.getText(), bookYearLabel.getText());
@@ -45,7 +52,7 @@ public class TakeBook {
 
                 Dialogs.showInfoDialog("Information", String.format("The book '%s' is yours! Nice reading", titleLabel.getText()));
 
-                LibBook selectedItem = (LibBook) tableBooks.getSelectionModel().getSelectedItem();
+                Book selectedItem = tableBooks.getSelectionModel().getSelectedItem();
 
                 booksList.removeAll(selectedItem);             // delete selected book from list after search
                 tableBooks.getItems().remove(selectedItem);    // delete selected book without search
@@ -55,6 +62,8 @@ public class TakeBook {
             }
 
         }
+
+
     }
 
 }

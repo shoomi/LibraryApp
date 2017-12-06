@@ -104,3 +104,6 @@ WHERE ((SELECT count(book_id)
                                                                                 WHERE
                                                                                   books.book_id = borrowings.book_id))
 
+
+
+SELECT password from users WHERE login = 'shoomi'

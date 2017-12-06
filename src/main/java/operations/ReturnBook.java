@@ -5,13 +5,19 @@ import dialogs.Dialogs;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
-import libWorker.LibWorker;
-import libraryitem.Book;
+import libworker.LibWorker;
+import libitems.Book;
 
 import java.sql.SQLException;
 
 
 public class ReturnBook {
+
+    private LibWorker libWorker;
+
+    public ReturnBook() {
+        libWorker = new LibWorker();
+    }
 
     public void returnTheBook(Label titleLabel, Label authorLabel, Label bookYearLabel, TableView<Book> tableBorrowingBooks, ObservableList<Book> booksList) {
 
@@ -20,7 +26,7 @@ public class ReturnBook {
         } else {
 
             try {
-                new LibWorker().returnUserBook(LoginCheck.userLogin, titleLabel.getText(), authorLabel.getText(), bookYearLabel.getText());
+                libWorker.returnUserBook(LoginCheck.userLogin, titleLabel.getText(), authorLabel.getText(), bookYearLabel.getText());
             } catch (SQLException e) {
                 e.printStackTrace();
             }

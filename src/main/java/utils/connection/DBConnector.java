@@ -8,7 +8,7 @@ import java.sql.SQLException;
 
 public class DBConnector implements Connector {
 
-    private Connection connection;
+    private static Connection connection;
 
     @Override
     public Connection getConnection() {

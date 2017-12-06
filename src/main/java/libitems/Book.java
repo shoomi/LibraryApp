@@ -1,4 +1,4 @@
-package libraryitem;
+package libitems;
 
 import javafx.beans.property.SimpleStringProperty;
 

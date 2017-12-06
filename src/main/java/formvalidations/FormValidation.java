@@ -1,5 +1,6 @@
 package formvalidations;
 
+import libworker.LibWorker;
 import utils.connection.DBConnector;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -51,17 +52,11 @@ public class FormValidation {
 
     public static boolean loginIsNotBusy(TextField login, Label label, String sValidationText) {
 
-        DBConnector dbConnector = new DBConnector();
         try {
-            Statement statement = dbConnector.getConnection().createStatement();
-            String query = "SELECT login FROM mylibrary.users where login='" + login.getText() + "'";
-            ResultSet rs = statement.executeQuery(query);
-            if (rs.next()) {
+            if (new LibWorker().loginExists(login.getText())) {
                 label.setText(sValidationText);
                 return false;
             }
-            rs.close();
-            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

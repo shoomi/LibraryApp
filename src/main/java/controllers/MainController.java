@@ -1,6 +1,8 @@
 package controllers;
 
 import javafx.application.Platform;
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 
 import java.io.IOException;
@@ -10,6 +12,7 @@ import java.sql.SQLException;
 public class MainController {
 
     public static String someOperationsButtonId;
+
 
     public void addNewBook(javafx.event.ActionEvent actionEvent) throws SQLException, IOException {
        new AddBookController().showAddBookToDbWindow(actionEvent);

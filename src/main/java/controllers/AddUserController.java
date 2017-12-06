@@ -19,6 +19,8 @@ public class AddUserController {
     @FXML
     private TextField loginField;
     @FXML
+    public TextField passwordField;
+    @FXML
     private TextField firstNameField;
     @FXML
     private TextField lastNameField;
@@ -30,6 +32,8 @@ public class AddUserController {
     @FXML
     private Label loginLabel;
     @FXML
+    public Label passwordLabel;
+    @FXML
     private Label lastNameLabel;
     @FXML
     private Label firsNameLabel;
@@ -39,6 +43,12 @@ public class AddUserController {
     private Label telLabel;
     @FXML
     private Label addingConfirmLabel;
+
+    private RegUserInDb regUserInDb;
+
+    public AddUserController() {
+        regUserInDb = new RegUserInDb();
+    }
 
 
     public void showAddUserToDbWindow(javafx.event.ActionEvent actionEvent) {
@@ -65,13 +75,14 @@ public class AddUserController {
 
         addingConfirmLabel.setText(null);
 
-        if (new UserValuesControl().checkValues(loginField, firstNameField, lastNameField, telephoneField, dateField, loginLabel, firsNameLabel, lastNameLabel, telLabel, dateLabel)) {
+        if (new UserValuesControl().checkValues(loginField, passwordField, firstNameField, lastNameField, telephoneField, dateField, loginLabel, passwordLabel, firsNameLabel, lastNameLabel, telLabel, dateLabel)) {
 
-            new RegUserInDb().addNewUser(loginField.getText(), firstNameField.getText(), lastNameField.getText(), telephoneField.getText(), dateField.getText());
+            regUserInDb.addNewUser(loginField.getText(), firstNameField.getText(), lastNameField.getText(), telephoneField.getText(), dateField.getText(), passwordField.getText());
 
             addingConfirmLabel.setText(String.format(" LibUser  '%s'  was successfully added to database", loginField.getText()));
 
             loginField.setText(null);
+            passwordField.setText(null);
             firstNameField.setText(null);
             lastNameField.setText(null);
             telephoneField.setText(null);
