@@ -4,85 +4,195 @@ import controllers.LoginCheck;
 import javafx.collections.ObservableList;
 import libitems.Book;
 import libitems.User;
-import utils.connection.NewStatementConnector;
+import utils.connection.C3P0DataSource;
 import utils.Util;
 import libitems.LibBook;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class LibWorker {
 
-    private static Statement statement;
-    private ResultSet rs;
 
-    public LibWorker() {
-        if (statement == null) {
-            statement = new NewStatementConnector().returnStatement();
+    public boolean loadDataFromDbInBookList(ObservableList<Book> booksList) {
+
+        int sequenceNumber = 1;
+
+        try (Connection con = C3P0DataSource.getInstance().getConnection()) {
+
+            Statement statement = con.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT books.title,books.author, books.release_date\n" +            /// select all free books from Db
+                    "FROM books\n" +
+                    "WHERE book_id NOT IN(SELECT DISTINCT borrowings.book_id\n" +
+                    "                 FROM borrowings\n" +
+                    "                   INNER JOIN books ON borrowings.book_id = books.book_id\n" +
+                    "                 WHERE ((SELECT count(book_id) FROM borrowings WHERE borrowings.book_id = books.book_id AND returning_date IS NULL) = (SELECT stock FROM books WHERE books.book_id =borrowings.book_id)))");
+
+            while (rs.next()) {
+                booksList.add(new LibBook(Integer.toString(sequenceNumber), rs.getString("title"), rs.getString("author"), rs.getString("release_date")));
+                sequenceNumber++;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return sequenceNumber > 1;
+    }
+
+
+    public void addNewUserToDbUsers(User libUser) {
+
+        String addNewUser = "INSERT INTO  mylibrary.`users` (login, first_name, last_name, phone_number, date_of_birth, password) VALUES (?,?, ?,?,?,?)";
+        try (Connection con = C3P0DataSource.getInstance().getConnection()) {
+
+            PreparedStatement ps = con.prepareStatement(addNewUser);
+            ps.setString(1, libUser.getLogin());
+            ps.setString(2, libUser.getFirstName());
+            ps.setString(3, libUser.getLastName());
+            ps.setString(4, libUser.getTelephone());
+            ps.setString(5, libUser.dateOfBirth());
+            ps.setString(6, libUser.getPassword());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
-    private ResultSet rsFreeBooksFromDb() throws SQLException {
-        rs = statement.executeQuery("SELECT books.title,books.author, books.release_date\n" +
-                "FROM books\n" +
-                "WHERE book_id NOT IN(SELECT DISTINCT borrowings.book_id\n" +
-                "                 FROM borrowings\n" +
-                "                   INNER JOIN books ON borrowings.book_id = books.book_id\n" +
-                "                 WHERE ((SELECT count(book_id) FROM borrowings WHERE borrowings.book_id = books.book_id AND returning_date IS NULL) = (SELECT stock FROM books WHERE books.book_id =borrowings.book_id)))");
-        return rs;
-    }
+    public void addNewBookToDbBooks(Book book) {
 
+        String addNewBook = "INSERT INTO  mylibrary.`books` (title, author, release_date, stock) VALUES (?,?,?,?)";
+        try (Connection con = C3P0DataSource.getInstance().getConnection()) {
 
-    public void addNewUserToDbUsers(User libUser) throws SQLException {
-        String addNewUser = String.format("INSERT INTO  mylibrary.`users` (login, first_name, last_name, phone_number, date_of_birth, password) VALUES ('%s','%s', '%s', '%s', '%s','%s' )", libUser.getLogin(), libUser.getFirstName(), libUser.getLastName(), libUser.getTelephone(), libUser.dateOfBirth(), libUser.getPassword());
-        statement.execute(addNewUser);
-    }
-
-    public void addNewBookToDbBooks(Book book) throws SQLException {
-        String addNewBook = String.format("INSERT INTO  mylibrary.`books` (title, author, release_date, stock) VALUES ('%s','%s', '%s', %d)", book.getTitle(), book.getAuthor(), book.getReleaseYear(), book.getStock());
-        statement.execute(addNewBook);
-    }
-
-    public boolean loginExists(String userLogin) throws SQLException {
-        rs = statement.executeQuery(String.format("SELECT user_id FROM users WHERE login = '%s'", userLogin));
-        if (rs.next()) {
-            return true;
+            PreparedStatement ps = con.prepareStatement(addNewBook);
+            ps.setString(1, book.getTitle());
+            ps.setString(2, book.getAuthor());
+            ps.setString(3, book.getReleaseYear());
+            ps.setInt(4, book.getStock());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        rs.close();
+    }
+
+    public void giveNewBookToUser(String userLogin, String bookTitle, String bookAuthor, String booksYearRelese) {
+
+        try (Connection con = C3P0DataSource.getInstance().getConnection()) {
+
+            Statement statement = con.createStatement();
+            statement.execute(String.format("INSERT INTO mylibrary.`borrowings` (user_id, book_id, borrowing_date) VALUES ((SELECT user_id\n" +
+                    "                                                                               FROM users\n" +
+                    "                                                                               WHERE login = '%s'),\n" +
+                    "                                                                              (SELECT book_id\n" +
+                    "                                                                               FROM books\n" +
+                    "                                                                               WHERE\n" +
+                    "                                                                                 title = '%s' AND author = '%s' AND\n" +
+                    "                                                                                 release_date = '%s'),\n" +
+                    "                                                                              '%s')", userLogin, bookTitle, bookAuthor, booksYearRelese, new Util().getCurrentTime()));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println("This book is yours! Nice reading");
+    }
+
+
+    public void addBookToExisting(Book book) {
+
+        try (Connection con = C3P0DataSource.getInstance().getConnection()) {
+
+            PreparedStatement ps = con.prepareStatement("UPDATE mylibrary.books SET stock = stock + ? WHERE books.title = ? AND books.author = ? AND release_date = ?");
+            ps.setInt(1, book.getStock());
+            ps.setString(2, book.getTitle());
+            ps.setString(3, book.getAuthor());
+            ps.setString(4, book.getReleaseYear());
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void returnUserBook(String userLogin, String bookTitle, String bookAuthor, String booksYearRelease) {
+
+        try (Connection con = C3P0DataSource.getInstance().getConnection()) {
+
+            Statement statement = con.createStatement();
+            statement.execute(String.format("UPDATE mylibrary.borrowings\n" +
+                    "SET returning_date = '%s'\n" +
+                    "WHERE user_id = (SELECT user_id\n" +
+                    "                 FROM users\n" +
+                    "                 WHERE login = '%s') AND book_id = (SELECT book_id\n" +
+                    "                                                        FROM books\n" +
+                    "                                                        WHERE\n" +
+                    "                                                          title = '%s' AND author = '%s' AND\n" +
+                    "                                                          release_date = '%s') and returning_date is NULL", new Util().getCurrentTime(), userLogin, bookTitle, bookAuthor, booksYearRelease));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public boolean loginExists(String userLogin) {
+
+        try (Connection con = C3P0DataSource.getInstance().getConnection()) {
+
+            Statement statement = con.createStatement();
+            ResultSet rs = statement.executeQuery(String.format("SELECT user_id FROM users WHERE login = '%s'", userLogin));
+            if (rs.next()) {
+                return true;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         return false;
     }
 
 
-    public void giveNewBookToUser(String userLogin, String bookTitle, String bookAuthor, String booksYearRelese) throws SQLException {
+    public boolean doesBookExist(Book book) {
 
-        statement.execute(String.format("INSERT INTO mylibrary.`borrowings` (user_id, book_id, borrowing_date) VALUES ((SELECT user_id\n" +
-                "                                                                               FROM users\n" +
-                "                                                                               WHERE login = '%s'),\n" +
-                "                                                                              (SELECT book_id\n" +
-                "                                                                               FROM books\n" +
-                "                                                                               WHERE\n" +
-                "                                                                                 title = '%s' AND author = '%s' AND\n" +
-                "                                                                                 release_date = '%s'),\n" +
-                "                                                                              '%s')", userLogin, bookTitle, bookAuthor, booksYearRelese, new Util().getCurrentTime()));
-        System.out.println("This book is yours! Nice reading");
-    }
+        try (Connection con = C3P0DataSource.getInstance().getConnection();) {
+            Statement statement = con.createStatement();
+            ResultSet rs = statement.executeQuery(String.format("SELECT books.title FROM books WHERE books.title = '%s' AND books.author = '%s' " +
+                    "AND release_date = '%s'", book.getTitle(), book.getAuthor(), book.getReleaseYear()));
+            if (rs.next())
+                return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-    public void returnUserBook(String userLogin, String bookTitle, String bookAuthor, String booksYearRelease) throws SQLException {
-
-        statement.execute(String.format("UPDATE mylibrary.borrowings\n" +
-                "SET returning_date = '%s'\n" +
-                "WHERE user_id = (SELECT user_id\n" +
-                "                 FROM users\n" +
-                "                 WHERE login = '%s') AND book_id = (SELECT book_id\n" +
-                "                                                        FROM books\n" +
-                "                                                        WHERE\n" +
-                "                                                          title = '%s' AND author = '%s' AND\n" +
-                "                                                          release_date = '%s') and returning_date is NULL", new Util().getCurrentTime(), userLogin, bookTitle, bookAuthor, booksYearRelease));
+        return false;
     }
 
 
-    private ResultSet rsUsersBooks(String userLogin) throws SQLException {
+    public boolean userBorrowThisBook(String userLogin, String bookTitle, String bookAuthor, String booksYearRelease) {
+
+        String query = String.format("SELECT borrowing_date\n" +
+                "FROM borrowings\n" +
+                "  INNER JOIN books ON borrowings.book_id = books.book_id\n" +
+                "WHERE borrowings.user_id = (SELECT user_id FROM users WHERE login = '%s') AND\n" +
+                "      title = '%s' and author = '%s' AND release_date = '%s' AND returning_date IS NULL", userLogin, bookTitle, bookAuthor, booksYearRelease);
+
+        try (Connection con = C3P0DataSource.getInstance().getConnection()) {
+
+            Statement statement = con.createStatement();
+            ResultSet rs = statement.executeQuery(query);
+            if (rs.next()) {
+                return true;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+
+    public boolean loadDataFromDbInBorrowedBooksList(ObservableList<Book> borrowedBooksList) {
+
+        int sequenceNumber = 1;
+
         String query = String.format("SELECT\n" +
                 "  title,\n" +
                 "  author,\n" +
@@ -91,69 +201,42 @@ public class LibWorker {
                 "FROM ((borrowings\n" +
                 "  INNER JOIN books ON borrowings.book_id = books.book_id)\n" +
                 "  INNER JOIN users ON borrowings.user_id = users.user_id)\n" +
-                "WHERE (users.login = '%s') AND returning_date IS NULL", userLogin);
-        return statement.executeQuery(query);
-    }
+                "WHERE (users.login = '%s') AND returning_date IS NULL", LoginCheck.userLogin);
 
+        try (Connection con = C3P0DataSource.getInstance().getConnection()) {
 
-    public boolean userBorrowThisBook(String userLogin, String bookTitle, String bookAuthor, String booksYearRelease) throws SQLException {
-        String query = String.format("SELECT borrowing_date\n" +
-                "FROM borrowings\n" +
-                "  INNER JOIN books ON borrowings.book_id = books.book_id\n" +
-                "WHERE borrowings.user_id = (SELECT user_id FROM users WHERE login = '%s') AND\n" +
-                "      title = '%s' and author = '%s' AND release_date = '%s' AND returning_date IS NULL", userLogin, bookTitle, bookAuthor, booksYearRelease);
-        rs = statement.executeQuery(query);
-        if (rs.next()) {
-            return true;
+            Statement statement = con.createStatement();
+            ResultSet rs = statement.executeQuery(query);
+            while (rs.next()) {
+                borrowedBooksList.add(new LibBook(Integer.toString(sequenceNumber), rs.getString("title"), rs.getString("author"), rs.getString("release_date"), rs.getString("borrowing_date")));
+                sequenceNumber++;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        rs.close();
-        return false;
-    }
 
-
-    public void addBookToExisting(Book book) throws SQLException {
-        statement.executeUpdate(String.format("UPDATE mylibrary.books SET stock = stock + %d " +
-                        "WHERE books.title = '%s' AND books.author = '%s' and release_date = '%s'",
-                book.getStock(), book.getTitle(), book.getAuthor(), book.getReleaseYear()));
-    }
-
-    public boolean doesBookExist(Book book) throws SQLException {
-        rs = statement.executeQuery(String.format("SELECT books.title FROM books WHERE books.title = '%s' AND books.author = '%s' " +
-                "AND release_date = '%s'", book.getTitle(), book.getAuthor(), book.getReleaseYear()));
-        return rs.next();
-    }
-
-    public boolean loadDataFromDbInBookList(ObservableList<Book> booksList) throws SQLException {
-        rs = rsFreeBooksFromDb();        /// select all free books from Db
-        int sequenceNumber = 1;
-        while (rs.next()) {
-            booksList.add(new LibBook(Integer.toString(sequenceNumber), rs.getString("title"), rs.getString("author"), rs.getString("release_date")));
-            sequenceNumber++;
-        }
-        rs.close();
         return sequenceNumber > 1;
     }
 
-    public boolean loadDataFromDbInBorrowedBooksList(ObservableList<Book> borrowedBooksList) throws SQLException {
 
-        int sequenceNumber = 1;
-        rs = rsUsersBooks(LoginCheck.userLogin);
-        while (rs.next()) {
-            borrowedBooksList.add(new LibBook(Integer.toString(sequenceNumber), rs.getString("title"), rs.getString("author"), rs.getString("release_date"), rs.getString("borrowing_date")));
-            sequenceNumber++;
-        }
-        rs.close();
-        return sequenceNumber > 1;
-    }
+    public String getUserPassword(String login) {
 
-    public String getUserPassword(String login) throws SQLException {
         String password = "";
-        statement.executeQuery(String.format("SELECT password FROM users WHERE login = '%s'", login));
-        rs = statement.getResultSet();
-        if (rs.next()) {
-            password = rs.getString("password");
+        try (Connection con = C3P0DataSource.getInstance().getConnection()) {
+
+            Statement statement = con.createStatement();
+            statement.executeQuery(String.format("SELECT password FROM users WHERE login = '%s'", login));
+            ResultSet rs = statement.getResultSet();
+            if (rs.next()) {
+                password = rs.getString("password");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+
         return password;
     }
+
 
 }

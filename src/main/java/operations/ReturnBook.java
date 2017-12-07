@@ -25,11 +25,7 @@ public class ReturnBook {
             Dialogs.showInfoDialog("Hey", "Make your choice");
         } else {
 
-            try {
                 libWorker.returnUserBook(LoginCheck.userLogin, titleLabel.getText(), authorLabel.getText(), bookYearLabel.getText());
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
 
             Dialogs.showInfoDialog("Information", String.format("The book '%s' was returned! Thanks", titleLabel.getText()));
 

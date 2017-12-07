@@ -27,12 +27,9 @@ public class RegUserInDb {
         user.setTelephone(telephone);
         user.setDate_of_birth(dateOfBirth);
 
-        try {
-            libWorker.addNewUserToDbUsers(user);
+        libWorker.addNewUserToDbUsers(user);
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
     }
 
 

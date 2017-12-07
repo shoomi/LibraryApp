@@ -45,9 +45,11 @@ public class AddUserController {
     private Label addingConfirmLabel;
 
     private RegUserInDb regUserInDb;
+    private UserValuesControl userValuesControl;
 
     public AddUserController() {
         regUserInDb = new RegUserInDb();
+        userValuesControl = new UserValuesControl();
     }
 
 
@@ -75,7 +77,7 @@ public class AddUserController {
 
         addingConfirmLabel.setText(null);
 
-        if (new UserValuesControl().checkValues(loginField, passwordField, firstNameField, lastNameField, telephoneField, dateField, loginLabel, passwordLabel, firsNameLabel, lastNameLabel, telLabel, dateLabel)) {
+        if (userValuesControl.checkValues(loginField, passwordField, firstNameField, lastNameField, telephoneField, dateField, loginLabel, passwordLabel, firsNameLabel, lastNameLabel, telLabel, dateLabel)) {
 
             regUserInDb.addNewUser(loginField.getText(), firstNameField.getText(), lastNameField.getText(), telephoneField.getText(), dateField.getText(), passwordField.getText());
 

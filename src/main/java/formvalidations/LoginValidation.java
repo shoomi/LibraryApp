@@ -18,19 +18,16 @@ public class LoginValidation {
         boolean loginExists = false;
         boolean passwordIsValid = false;
 
-        try {
-            loginExists = libWorker.loginExists(login);
-            if (loginExists) {
-                loginLabel.setText(null);
-                passwordIsValid = Password.checkPassword(password, libWorker.getUserPassword(login));
-                if (!passwordIsValid) {
-                    passwordLabel.setText("You entered incorrect password");
-                }
-            } else
-                loginLabel.setText("this login is not registered");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        loginExists = libWorker.loginExists(login);
+        if (loginExists) {
+            loginLabel.setText(null);
+            passwordIsValid = Password.checkPassword(password, libWorker.getUserPassword(login));
+            if (!passwordIsValid) {
+                passwordLabel.setText("You entered incorrect password");
+            }
+        } else
+            loginLabel.setText("this login is not registered");
+
 
         return loginExists && passwordIsValid;
     }

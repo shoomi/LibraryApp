@@ -17,22 +17,20 @@ public class RegBookInDb {
 
         LibBook libBook = new LibBook();
 
-        try {
 
-            libBook.setTitle(title);
-            libBook.setAuthor(author);
-            libBook.setReleaseYear(releaseYear);
-            libBook.setStock(numberOfBooks);
+        libBook.setTitle(title);
+        libBook.setAuthor(author);
+        libBook.setReleaseYear(releaseYear);
+        libBook.setStock(numberOfBooks);
 
-            if (!libWorker.doesBookExist(libBook)) {
-                libWorker.addNewBookToDbBooks(libBook);
-            } else {
-                libWorker.addBookToExisting(libBook);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if (!libWorker.doesBookExist(libBook)) {
+            System.out.println(libBook);
+            libWorker.addNewBookToDbBooks(libBook);
+        } else {
+            libWorker.addBookToExisting(libBook);
         }
+
+
     }
 
 

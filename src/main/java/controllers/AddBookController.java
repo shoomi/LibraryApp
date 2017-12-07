@@ -40,9 +40,11 @@ public class AddBookController {
     private Label addingBookConfirmLabel;
 
     private RegBookInDb regBookInDb;
+    private BookValuesControl bookValuesControl;
 
     public AddBookController (){
         regBookInDb = new RegBookInDb();
+        bookValuesControl = new BookValuesControl();
     }
 
 
@@ -70,7 +72,7 @@ public class AddBookController {
 
         addingBookConfirmLabel.setText(null);
 
-        if (new BookValuesControl().checkValues(titleField, authorField, yearBookField, numberOfBooksField, titleLabel, authorLabel, numberOfBooksLabel, yearBookLabel)) {
+        if (bookValuesControl.checkValues(titleField, authorField, yearBookField, numberOfBooksField, titleLabel, authorLabel, numberOfBooksLabel, yearBookLabel)) {
 
             regBookInDb.addNewBook(titleField.getText(), authorField.getText(), yearBookField.getText(), Integer.parseInt(numberOfBooksField.getText()));
             addingBookConfirmLabel.setText(String.format("The book '%s' '%s' was successfully added to database ", titleField.getText(), authorField.getText()));

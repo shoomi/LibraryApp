@@ -33,7 +33,7 @@ public class LoginCheck {
 
     private LoginValidation loginValidation;
 
-    public LoginCheck() {
+    public LoginCheck()  {
         loginValidation = new LoginValidation();
     }
 

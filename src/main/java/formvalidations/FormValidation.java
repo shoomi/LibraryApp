@@ -21,7 +21,6 @@ public class FormValidation {
             return true;
         }
         label.setText(sValidationText);
-        System.out.println("IS EMPTY");
         return false;
     }
 
@@ -52,14 +51,12 @@ public class FormValidation {
 
     public static boolean loginIsNotBusy(TextField login, Label label, String sValidationText) {
 
-        try {
             if (new LibWorker().loginExists(login.getText())) {
                 label.setText(sValidationText);
                 return false;
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
+
         return true;
     }
 

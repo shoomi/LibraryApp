@@ -17,13 +17,10 @@ public class TakeBook {
     private LibWorker libWorker;
 
     public TakeBook() {
-        System.out.println("TTTAAAAKKKEEEE");
         libWorker = new LibWorker();
     }
 
     private boolean giveThisBook(Label titleLabel, Label authorLabel, Label bookYearLabel) {
-
-        try {
 
             if (!libWorker.userBorrowThisBook(LoginCheck.userLogin, titleLabel.getText(), authorLabel.getText(), bookYearLabel.getText())) {
 
@@ -35,9 +32,7 @@ public class TakeBook {
 
                 return true;
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
         return false;
     }
 
