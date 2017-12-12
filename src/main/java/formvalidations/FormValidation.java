@@ -26,15 +26,18 @@ public class FormValidation {
 
     public static boolean telephoneIsValid(TextField tel, Label label, String sValidationText) {
 
-        Pattern pattern = Pattern.compile("\\d{3}-\\d{7}");
+        Pattern pattern = Pattern.compile("\\d{10}|\\d{12}|\\d{13}|\\d{3}-\\d{7}|\\d{3}-\\d{4}-\\d{3}|\\d{3}-\\d{3}-\\d{4}|\\+\\d{12}|\\+\\d{3}-\\d{9}|\\+\\d{3}-\\d{3}-\\d{3}-\\d{3}|\\+\\d{2}-\\d{3}-\\d{4}-\\d{3}|\\+\\d{3}-\\d{2}-\\d{3}-\\d{4}|\\d{3} \\d{7}|\\d{3} \\d{4} \\d{3}|\\d{3} \\d{3} \\d{4}|\\+\\d{3} \\d{9}|\\+\\d{3} \\d{3} \\d{3} \\d{3}|\\+\\d{2} \\d{3} \\d{4} \\d{3}|\\+\\d{3} \\d{2} \\d{3} \\d{4}");
+
+
         Matcher matcher = pattern.matcher(tel.getText());
+
         if (matcher.matches()) {
             label.setText(null);
+            tel.setText(tel.getText().replaceAll("[\\-\\+\\ ]", ""));
             return true;
         }
         label.setText(sValidationText);
         return false;
-
     }
 
     public static boolean dateIsValid(TextField date, Label label, String sValidationText) {
@@ -51,10 +54,10 @@ public class FormValidation {
 
     public static boolean loginIsNotBusy(TextField login, Label label, String sValidationText) {
 
-            if (new LibWorker().loginExists(login.getText())) {
-                label.setText(sValidationText);
-                return false;
-            }
+        if (new LibWorker().loginExists(login.getText())) {
+            label.setText(sValidationText);
+            return false;
+        }
 
 
         return true;

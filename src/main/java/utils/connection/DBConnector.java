@@ -2,28 +2,22 @@ package utils.connection;
 
 import dialogs.Dialogs;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Properties;
 
-public class DBConnector implements Connector {
+public class DBConnector {
 
-    private static Connection connection;
 
-    @Override
-    public Connection getConnection()  {
+    public static Connection getConnection() {
 
-//        final String URL = "jdbc:mysql://127.0.0.1/mylibrary?useSSL=false";
+        Connection connection = null;
+
         final String URL = "jdbc:mysql://localhost:3306/mylibrary?useSSL=false";
-        final String USER = "root";
-        final String PASS = "root";
+        final String USER = "shoomi";
+        final String PASS = "Infinitron4";
 
         try {
-
             System.out.println("I am connected");
             connection = DriverManager.getConnection(URL, USER, PASS);
 
@@ -37,12 +31,4 @@ public class DBConnector implements Connector {
         return connection;
     }
 
-    @Override
-    public void closeConnection() {
-        try {
-            this.connection.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 }

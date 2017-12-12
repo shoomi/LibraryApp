@@ -17,19 +17,16 @@ public class RegBookInDb {
 
         LibBook libBook = new LibBook();
 
-
         libBook.setTitle(title);
         libBook.setAuthor(author);
         libBook.setReleaseYear(releaseYear);
         libBook.setStock(numberOfBooks);
 
         if (!libWorker.doesBookExist(libBook)) {
-            System.out.println(libBook);
             libWorker.addNewBookToDbBooks(libBook);
         } else {
             libWorker.addBookToExisting(libBook);
         }
-
 
     }
 

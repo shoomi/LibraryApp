@@ -49,7 +49,7 @@ public class TakeBook {
 
                 Book selectedItem = tableBooks.getSelectionModel().getSelectedItem();
 
-                booksList.removeAll(selectedItem);             // delete selected book from list after search
+                booksList.remove(selectedItem);             // delete selected book from list after search
                 tableBooks.getItems().remove(selectedItem);    // delete selected book without search
 
             } else {

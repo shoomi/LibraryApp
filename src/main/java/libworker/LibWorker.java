@@ -4,9 +4,9 @@ import controllers.LoginCheck;
 import javafx.collections.ObservableList;
 import libitems.Book;
 import libitems.User;
-import utils.connection.C3P0DataSource;
 import utils.Util;
 import libitems.LibBook;
+import utils.connection.NewConnection;
 
 import java.sql.*;
 
@@ -17,7 +17,7 @@ public class LibWorker {
 
         int sequenceNumber = 1;
 
-        try (Connection con = C3P0DataSource.getInstance().getConnection()) {
+        try (Connection con = NewConnection.getConnection()) {
 
             Statement statement = con.createStatement();
             ResultSet rs = statement.executeQuery("SELECT books.title,books.author, books.release_date\n" +            /// select all free books from Db
@@ -42,7 +42,7 @@ public class LibWorker {
     public void addNewUserToDbUsers(User libUser) {
 
         String addNewUser = "INSERT INTO  mylibrary.`users` (login, first_name, last_name, phone_number, date_of_birth, password) VALUES (?,?, ?,?,?,?)";
-        try (Connection con = C3P0DataSource.getInstance().getConnection()) {
+        try (Connection con = NewConnection.getConnection()) {
 
             PreparedStatement ps = con.prepareStatement(addNewUser);
             ps.setString(1, libUser.getLogin());
@@ -60,7 +60,7 @@ public class LibWorker {
     public void addNewBookToDbBooks(Book book) {
 
         String addNewBook = "INSERT INTO  mylibrary.`books` (title, author, release_date, stock) VALUES (?,?,?,?)";
-        try (Connection con = C3P0DataSource.getInstance().getConnection()) {
+        try (Connection con = NewConnection.getConnection()) {
 
             PreparedStatement ps = con.prepareStatement(addNewBook);
             ps.setString(1, book.getTitle());
@@ -75,7 +75,7 @@ public class LibWorker {
 
     public void giveNewBookToUser(String userLogin, String bookTitle, String bookAuthor, String booksYearRelese) {
 
-        try (Connection con = C3P0DataSource.getInstance().getConnection()) {
+        try (Connection con = NewConnection.getConnection()) {
 
             Statement statement = con.createStatement();
             statement.execute(String.format("INSERT INTO mylibrary.`borrowings` (user_id, book_id, borrowing_date) VALUES ((SELECT user_id\n" +
@@ -96,7 +96,7 @@ public class LibWorker {
 
     public void addBookToExisting(Book book) {
 
-        try (Connection con = C3P0DataSource.getInstance().getConnection()) {
+        try (Connection con = NewConnection.getConnection()) {
 
             PreparedStatement ps = con.prepareStatement("UPDATE mylibrary.books SET stock = stock + ? WHERE books.title = ? AND books.author = ? AND release_date = ?");
             ps.setInt(1, book.getStock());
@@ -113,7 +113,7 @@ public class LibWorker {
 
     public void returnUserBook(String userLogin, String bookTitle, String bookAuthor, String booksYearRelease) {
 
-        try (Connection con = C3P0DataSource.getInstance().getConnection()) {
+        try (Connection con = NewConnection.getConnection()) {
 
             Statement statement = con.createStatement();
             statement.execute(String.format("UPDATE mylibrary.borrowings\n" +
@@ -133,8 +133,7 @@ public class LibWorker {
 
     public boolean loginExists(String userLogin) {
 
-        try (Connection con = C3P0DataSource.getInstance().getConnection()) {
-
+        try (Connection con = NewConnection.getConnection()) {
             Statement statement = con.createStatement();
             ResultSet rs = statement.executeQuery(String.format("SELECT user_id FROM users WHERE login = '%s'", userLogin));
             if (rs.next()) {
@@ -151,7 +150,7 @@ public class LibWorker {
 
     public boolean doesBookExist(Book book) {
 
-        try (Connection con = C3P0DataSource.getInstance().getConnection();) {
+        try (Connection con = NewConnection.getConnection()) {
             Statement statement = con.createStatement();
             ResultSet rs = statement.executeQuery(String.format("SELECT books.title FROM books WHERE books.title = '%s' AND books.author = '%s' " +
                     "AND release_date = '%s'", book.getTitle(), book.getAuthor(), book.getReleaseYear()));
@@ -173,7 +172,7 @@ public class LibWorker {
                 "WHERE borrowings.user_id = (SELECT user_id FROM users WHERE login = '%s') AND\n" +
                 "      title = '%s' and author = '%s' AND release_date = '%s' AND returning_date IS NULL", userLogin, bookTitle, bookAuthor, booksYearRelease);
 
-        try (Connection con = C3P0DataSource.getInstance().getConnection()) {
+        try (Connection con = NewConnection.getConnection()) {
 
             Statement statement = con.createStatement();
             ResultSet rs = statement.executeQuery(query);
@@ -203,7 +202,7 @@ public class LibWorker {
                 "  INNER JOIN users ON borrowings.user_id = users.user_id)\n" +
                 "WHERE (users.login = '%s') AND returning_date IS NULL", LoginCheck.userLogin);
 
-        try (Connection con = C3P0DataSource.getInstance().getConnection()) {
+        try (Connection con = NewConnection.getConnection()) {
 
             Statement statement = con.createStatement();
             ResultSet rs = statement.executeQuery(query);
@@ -223,7 +222,7 @@ public class LibWorker {
     public String getUserPassword(String login) {
 
         String password = "";
-        try (Connection con = C3P0DataSource.getInstance().getConnection()) {
+        try (Connection con = NewConnection.getConnection()) {
 
             Statement statement = con.createStatement();
             statement.executeQuery(String.format("SELECT password FROM users WHERE login = '%s'", login));
