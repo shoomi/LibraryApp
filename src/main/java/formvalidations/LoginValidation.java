@@ -4,8 +4,6 @@ import javafx.scene.control.Label;
 import libworker.LibWorker;
 import password.Password;
 
-import java.sql.SQLException;
-
 public class LoginValidation {
 
     private LibWorker libWorker;

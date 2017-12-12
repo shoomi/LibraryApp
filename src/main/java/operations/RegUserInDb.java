@@ -6,8 +6,6 @@ import libworker.LibWorker;
 import libitems.User;
 import password.Password;
 
-import java.sql.SQLException;
-
 public class RegUserInDb {
 
     private LibWorker libWorker;

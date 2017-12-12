@@ -4,11 +4,9 @@ import dialogs.Dialogs;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -23,7 +21,6 @@ import libitems.Book;
 
 import java.io.IOException;
 import java.sql.SQLException;
-
 import libworker.LibWorker;
 
 public class ReturnBookController {
@@ -46,7 +43,6 @@ public class ReturnBookController {
 
     @FXML
     private TextField searchField;
-
     @FXML
     private Label titleLabel;
     @FXML

@@ -7,10 +7,6 @@ import libworker.LibWorker;
 import controllers.LoginCheck;
 import javafx.scene.control.Label;
 import libitems.Book;
-import libitems.LibBook;
-
-import java.security.SecureRandom;
-import java.sql.SQLException;
 
 public class TakeBook {
 

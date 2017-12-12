@@ -1,13 +1,9 @@
 package formvalidations;
 
 import libworker.LibWorker;
-import utils.connection.DBConnector;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.regex.Matcher;

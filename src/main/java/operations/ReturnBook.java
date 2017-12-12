@@ -8,8 +8,6 @@ import javafx.scene.control.TableView;
 import libworker.LibWorker;
 import libitems.Book;
 
-import java.sql.SQLException;
-
 
 public class ReturnBook {
 

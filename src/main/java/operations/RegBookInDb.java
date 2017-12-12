@@ -3,8 +3,6 @@ package operations;
 import libworker.LibWorker;
 import libitems.LibBook;
 
-import java.sql.SQLException;
-
 public class RegBookInDb {
 
     private LibWorker libWorker;
