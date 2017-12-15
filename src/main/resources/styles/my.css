@@ -2,11 +2,11 @@
 
 
 .button{
-    -fx-color:blue;
+    /*-fx-color:blue;*/
 }
 
 #exitButton {
-    -fx-color:red;
+    /*-fx-color:red;*/
 }
 
 #anchorPane {
@@ -21,6 +21,7 @@
 .label {
     -fx-text-fill: #b91515;
 }
+
 
 
 
