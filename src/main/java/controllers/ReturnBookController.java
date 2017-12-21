@@ -4,6 +4,7 @@ import dialogs.Dialogs;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -61,7 +62,7 @@ public class ReturnBookController {
         try {
             Stage stage = new Stage();
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/returnBook.fxml"));
-            stage.setTitle(String.format("The list of your borrowed books in our library. You entered as'%s'", LoginCheck.userLogin));
+            stage.setTitle(String.format("Borrowed books '%s'", LoginCheck.userLogin));
             stage.setMinHeight(300);
             stage.setMinWidth(500);
             stage.setResizable(false);
@@ -125,8 +126,9 @@ public class ReturnBookController {
     public void searchBorrowedBook(KeyEvent keyEvent) {
         Search searchBorrowedBook = new BooksSearch();
         searchBorrowedBook.search(searchField, filteredBorrowedBooksList, tableBorrowingBooks);
-
     }
+
+
 
 //    private void getStageSource(ActionEvent actionEvent) {
 //        Node source = (Node) actionEvent.getSource();

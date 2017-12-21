@@ -12,10 +12,10 @@ public class C3P0DataSource {
 
     private C3P0DataSource() {
 
-            comboPooledDataSource = new ComboPooledDataSource();
-            comboPooledDataSource.setJdbcUrl("jdbc:mysql://localhost:3306/mylibrary?useSSL=false");
-            comboPooledDataSource.setUser("root");
-            comboPooledDataSource.setPassword("root");
+        comboPooledDataSource = new ComboPooledDataSource();
+        comboPooledDataSource.setJdbcUrl("jdbc:mysql://localhost:3306/mylibrary?useSSL=false");
+        comboPooledDataSource.setUser("root");
+        comboPooledDataSource.setPassword("root");
     }
 
     public static C3P0DataSource getInstance() {

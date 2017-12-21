@@ -13,8 +13,8 @@
         <Button id="addNewBookButton" fx:id="addNewBookButton" layoutX="57.0" layoutY="76.0" mnemonicParsing="false" onAction="#addNewBook" prefHeight="30.0" prefWidth="107.0" text="Add new book" />
       <SplitMenuButton layoutX="231.0" layoutY="76.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="137.0" text="Some operations">
         <items>
-            <MenuItem id="takeBook" fx:id="takeBookButton" mnemonicParsing="false" onAction="#takeBook" text="Take the libBook" />
-            <MenuItem id="returnBook" fx:id="returnBookButton" mnemonicParsing="false" onAction="#returnBook" text="Return the libBook" />
+            <MenuItem id="takeBook" fx:id="takeBookButton" mnemonicParsing="false" onAction="#takeBook" text="Take the book" />
+            <MenuItem id="returnBook" fx:id="returnBookButton" mnemonicParsing="false" onAction="#returnBook" text="Return the book" />
         </items>
       </SplitMenuButton>
       <Label fx:id="connectLabel" layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="82.0" textFill="#f5f2f2" />

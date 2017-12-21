@@ -26,7 +26,6 @@ public class LoginValidation {
         } else
             loginLabel.setText("this login is not registered");
 
-
         return loginExists && passwordIsValid;
     }
 

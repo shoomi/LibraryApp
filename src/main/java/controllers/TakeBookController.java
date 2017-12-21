@@ -61,7 +61,7 @@ public class TakeBookController {
         try {
             Stage stage = new Stage();
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/takeBook.fxml"));
-            stage.setTitle(String.format("The list of all available books in the library. You entered as '%s'", LoginCheck.userLogin));
+            stage.setTitle("Free books list");
             stage.setMinHeight(300);
             stage.setMinWidth(500);
             stage.setResizable(false);
@@ -130,8 +130,6 @@ public class TakeBookController {
 //        Node source = (Node) actionEvent.getSource();
 //        stage = (Stage) source.getScene().getWindow();
 //    }
-
-
 
 
 

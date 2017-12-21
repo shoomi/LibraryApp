@@ -24,7 +24,6 @@ public class FormValidation {
 
         Pattern pattern = Pattern.compile("\\d{10}|\\d{12}|\\d{13}|\\d{3}-\\d{7}|\\d{3}-\\d{4}-\\d{3}|\\d{3}-\\d{3}-\\d{4}|\\+\\d{12}|\\+\\d{3}-\\d{9}|\\+\\d{3}-\\d{3}-\\d{3}-\\d{3}|\\+\\d{2}-\\d{3}-\\d{4}-\\d{3}|\\+\\d{3}-\\d{2}-\\d{3}-\\d{4}|\\d{3} \\d{7}|\\d{3} \\d{4} \\d{3}|\\d{3} \\d{3} \\d{4}|\\+\\d{3} \\d{9}|\\+\\d{3} \\d{3} \\d{3} \\d{3}|\\+\\d{2} \\d{3} \\d{4} \\d{3}|\\+\\d{3} \\d{2} \\d{3} \\d{4}");
 
-
         Matcher matcher = pattern.matcher(tel.getText());
 
         if (matcher.matches()) {
