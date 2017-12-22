@@ -28,7 +28,7 @@ public class UserValuesControl {
         }
 
         if (dateFieldIsNotEmpty) {
-            dateIsValid = FormValidation.dateIsValid(dateField, dateLabel, "wrong date format");
+            dateIsValid = FormValidation.dateIsValid(dateField, dateLabel, "wrong date");
         }
 
         return loginFieldIsNotEmpty && passwordIsNotEmpty && firstNameFieldIsNotEmpty && lastNameFieldIsNotEmpty && telephoneFieldIsNotEmpty && telephoneFieldIsValid && loginIsNotBusy && dateFieldIsNotEmpty && dateIsValid;
