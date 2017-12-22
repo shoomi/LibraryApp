@@ -1,7 +1,5 @@
-/*stylesheets="/styles/my.css"*/
 
-
-.button{
+.button {
     /*-fx-color:blue;*/
 }
 
@@ -13,14 +11,32 @@
     -fx-background-image: url("/library.jpg");
 }
 
-#confirmFieldUser {
+#confirmField {
     -fx-text-fill: #bf510d;
-    -fx-text-alignment: center;
+    -fx-alignment: center;
+}
+
+#loginTitleLabel {
+    -fx-alignment: center;
+    -fx-text-fill: #1e088a;
+}
+
+#takeBookTitleLabel {
+    -fx-alignment: center;
+    -fx-text-fill: #1e088a;
+}
+
+#returnBookTitleLabel {
+    -fx-alignment: center;
+    -fx-text-fill: #1e088a;
 }
 
 .label {
     -fx-text-fill: #b91515;
 }
+
+
+
 
 
 

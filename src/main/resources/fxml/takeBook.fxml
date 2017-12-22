@@ -7,22 +7,32 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="514.0" prefWidth="1058.0" xmlns="http://javafx.com/javafx/8.0.151" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.controllers.TakeBookController">
+<AnchorPane prefHeight="514.0" prefWidth="1058.0" stylesheets="/styles/my.css" xmlns="http://javafx.com/javafx/8.0.151"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.controllers.TakeBookController">
 
     <children>
-        <TableView id="bookTable" fx:id="tableBooks" layoutX="30.0" layoutY="91.0" prefHeight="405.0" prefWidth="1005.0">
+
+        <TableView id="bookTable" fx:id="tableBooks" layoutX="30.0" layoutY="91.0" prefHeight="405.0"
+                   prefWidth="1005.0">
             <columns>
-                <TableColumn id="releaseYear" fx:id="sequenceNumberColumn" prefWidth="45.00001525878906" text="№" />
-                <TableColumn id="title" fx:id="titleColumn" prefWidth="466.0" text="Title" />
-                <TableColumn id="author" fx:id="authorColumn" minWidth="0.0" prefWidth="351.0" text="Author" />
-                <TableColumn id="author" fx:id="releaseYearColumn" minWidth="0.0" prefWidth="142.0" text="Release Year " />
+                <TableColumn id="releaseYear" fx:id="sequenceNumberColumn" prefWidth="45.00001525878906" text="№"/>
+                <TableColumn id="title" fx:id="titleColumn" prefWidth="466.0" text="Title"/>
+                <TableColumn id="author" fx:id="authorColumn" minWidth="0.0" prefWidth="351.0" text="Author"/>
+                <TableColumn id="author" fx:id="releaseYearColumn" minWidth="0.0" prefWidth="142.0"
+                             text="Release Year "/>
             </columns>
         </TableView>
-        <TextField fx:id="searchField" layoutX="822.0" layoutY="46.0" onKeyTyped="#searchTheBook" prefHeight="25.0" prefWidth="213.0" promptText="search" />
-        <Button fx:id="takeBookButton" defaultButton="true" layoutX="30.0" layoutY="46.0" mnemonicParsing="false" onAction="#takeTheBook" text="take this book" />
-        <Label fx:id="titleLabel" layoutX="130.0" layoutY="28.0" prefHeight="17.0" prefWidth="385.0" />
-        <Label fx:id="authorLabel" layoutX="130.0" layoutY="49.0" prefHeight="17.0" prefWidth="385.0" />
-        <Label fx:id="bookYearLabel" layoutX="130.0" layoutY="70.0" prefHeight="17.0" prefWidth="78.0" />
-      <Label layoutX="407.0" layoutY="10.0" text="Make double-click the list item to select the book" textFill="#d71919" />
+
+        <TextField fx:id="searchField" layoutX="822.0" layoutY="46.0" onKeyTyped="#searchTheBook" prefHeight="25.0"
+                   prefWidth="213.0" promptText="search"/>
+        <Button fx:id="takeBookButton" defaultButton="true" layoutX="30.0" layoutY="46.0" mnemonicParsing="false"
+                onAction="#takeTheBook" text="take this book"/>
+
+        <Label fx:id="titleLabel" layoutX="130.0" layoutY="28.0" prefHeight="17.0" prefWidth="385.0"/>
+        <Label fx:id="authorLabel" layoutX="130.0" layoutY="49.0" prefHeight="17.0" prefWidth="385.0"/>
+        <Label fx:id="bookYearLabel" layoutX="130.0" layoutY="70.0" prefHeight="17.0" prefWidth="78.0"/>
+        <Label id="takeBookTitleLabel" layoutX="407.0" layoutY="10.0"
+               text="Make double-click the list item to select the book"/>
+
     </children>
 </AnchorPane>

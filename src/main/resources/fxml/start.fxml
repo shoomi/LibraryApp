@@ -6,17 +6,30 @@
 <?import javafx.scene.control.SplitMenuButton?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="anchorPane" prefHeight="250.0" prefWidth="591.0" stylesheets="/styles/my.css" xmlns="http://javafx.com/javafx/8.0.151" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.controllers.MainController">
+<AnchorPane id="anchorPane" prefHeight="250.0" prefWidth="591.0" stylesheets="/styles/my.css"
+            xmlns="http://javafx.com/javafx/8.0.151" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="library.controllers.MainController">
     <children>
-        <Button id="exitButton" fx:id="exitButton" cancelButton="true" layoutX="248.0" layoutY="192.0" mnemonicParsing="false" onAction="#exit" prefHeight="30.0" prefWidth="103.0" text="exit" />
-        <Button id="addNewUserButton" fx:id="AddNewUserButton" layoutX="431.0" layoutY="76.0" mnemonicParsing="false" onAction="#addNewUser" prefHeight="30.0" prefWidth="107.0" text="Add new User" />
-        <Button id="addNewBookButton" fx:id="addNewBookButton" layoutX="57.0" layoutY="76.0" mnemonicParsing="false" onAction="#addNewBook" prefHeight="30.0" prefWidth="107.0" text="Add new book" />
-      <SplitMenuButton layoutX="231.0" layoutY="76.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="137.0" text="Some operations">
-        <items>
-            <MenuItem id="takeBook" fx:id="takeBookButton" mnemonicParsing="false" onAction="#takeBook" text="Take the book" />
-            <MenuItem id="returnBook" fx:id="returnBookButton" mnemonicParsing="false" onAction="#returnBook" text="Return the book" />
-        </items>
-      </SplitMenuButton>
-      <Label fx:id="connectLabel" layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="82.0" textFill="#f5f2f2" />
+
+        <Button id="exitButton" fx:id="exitButton" cancelButton="true" layoutX="248.0" layoutY="192.0"
+                mnemonicParsing="false" onAction="#exit" prefHeight="30.0" prefWidth="103.0" text="exit"/>
+        <Button id="addNewUserButton" fx:id="AddNewUserButton" layoutX="431.0" layoutY="76.0" mnemonicParsing="false"
+                onAction="#addNewUser" prefHeight="30.0" prefWidth="107.0" text="Add new User"/>
+        <Button id="addNewBookButton" fx:id="addNewBookButton" layoutX="57.0" layoutY="76.0" mnemonicParsing="false"
+                onAction="#addNewBook" prefHeight="30.0" prefWidth="107.0" text="Add new book"/>
+
+        <SplitMenuButton layoutX="231.0" layoutY="76.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="137.0"
+                         text="Some operations">
+            <items>
+                <MenuItem id="takeBook" fx:id="takeBookButton" mnemonicParsing="false" onAction="#takeBook"
+                          text="Take the book"/>
+                <MenuItem id="returnBook" fx:id="returnBookButton" mnemonicParsing="false" onAction="#returnBook"
+                          text="Return the book"/>
+            </items>
+        </SplitMenuButton>
+
+        <Label fx:id="connectLabel" layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="82.0"
+               textFill="#f5f2f2"/>
+
     </children>
 </AnchorPane>
