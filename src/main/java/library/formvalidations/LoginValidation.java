@@ -21,7 +21,7 @@ public class LoginValidation {
             loginLabel.setText(null);
             passwordIsValid = Password.checkPassword(password, libWorker.getUserPassword(login));
             if (!passwordIsValid) {
-                passwordLabel.setText("You entered incorrect library.password");
+                passwordLabel.setText("password doesn't match");
             }
         } else
             loginLabel.setText("this login is not registered");

@@ -10,11 +10,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import library.operations.RegUserInDb;
+import library.operations.RegisterUserInDb;
 
 import java.io.IOException;
 
-public class AddUserController {
+public class RegisterUserController {
 
     @FXML
     private TextField loginField;
@@ -44,11 +44,11 @@ public class AddUserController {
     @FXML
     private Label addingConfirmLabel;
 
-    private RegUserInDb regUserInDb;
+    private RegisterUserInDb registerUserInDb;
     private UserValuesControl userValuesControl;
 
-    public AddUserController() {
-        regUserInDb = new RegUserInDb();
+    public RegisterUserController() {
+        registerUserInDb = new RegisterUserInDb();
         userValuesControl = new UserValuesControl();
     }
 
@@ -57,7 +57,7 @@ public class AddUserController {
 
         try {
             Stage stage = new Stage();
-            Parent root = FXMLLoader.load(getClass().getResource("/fxml/addUser.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/fxml/registerUser.fxml"));
             stage.setTitle("Register new user");
             stage.setMinHeight(300);
             stage.setMinWidth(415);
@@ -79,7 +79,7 @@ public class AddUserController {
 
         if (userValuesControl.checkValues(loginField, passwordField, firstNameField, lastNameField, telephoneField, dateField, loginLabel, passwordLabel, firsNameLabel, lastNameLabel, telLabel, dateLabel)) {
 
-            regUserInDb.addNewUser(loginField.getText(), firstNameField.getText(), lastNameField.getText(), telephoneField.getText(), dateField.getText(), passwordField.getText());
+            registerUserInDb.addNewUser(loginField.getText(), firstNameField.getText(), lastNameField.getText(), telephoneField.getText(), dateField.getText(), passwordField.getText());
 
             addingConfirmLabel.setText(String.format(" LibUser  '%s'  was successfully added to database", loginField.getText()));
 

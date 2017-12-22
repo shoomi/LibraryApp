@@ -3,11 +3,11 @@ package library.operations;
 import library.LibWorker;
 import library.libitems.LibBook;
 
-public class RegBookInDb {
+public class RegisterBookInDb {
 
     private LibWorker libWorker;
 
-    public RegBookInDb() {
+    public RegisterBookInDb() {
         libWorker = new LibWorker();
     }
 

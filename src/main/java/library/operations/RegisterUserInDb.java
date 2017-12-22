@@ -6,11 +6,11 @@ import library.LibWorker;
 import library.libitems.User;
 import library.Password;
 
-public class RegUserInDb {
+public class RegisterUserInDb {
 
     private LibWorker libWorker;
 
-    public RegUserInDb() {
+    public RegisterUserInDb() {
         libWorker = new LibWorker();
     }
 

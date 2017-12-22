@@ -5,11 +5,11 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="256.0" prefWidth="464.0" xmlns="http://javafx.com/javafx/8.0.151" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.controllers.AddBookController">
+<AnchorPane prefHeight="256.0" prefWidth="464.0" xmlns="http://javafx.com/javafx/8.0.151" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.controllers.RegisterBookController">
 
     <children>
-        <TextField fx:id="titleField" layoutX="102.0" layoutY="29.0" prefHeight="25.0" prefWidth="264.0" promptText="libBook's title" />
-        <TextField fx:id="authorField" layoutX="101.0" layoutY="70.0" prefHeight="25.0" prefWidth="264.0" promptText="libBook's author" />
+        <TextField fx:id="titleField" layoutX="102.0" layoutY="29.0" prefHeight="25.0" prefWidth="264.0" promptText="book's title" />
+        <TextField fx:id="authorField" layoutX="101.0" layoutY="70.0" prefHeight="25.0" prefWidth="264.0" promptText="book's author" />
         <Button fx:id="saveBookButton" cancelButton="true" defaultButton="true" layoutX="214.0" layoutY="195.0" mnemonicParsing="false" onAction="#addBookToDb" styleClass="button" text="Save" />
         <TextField fx:id="yearBookField" layoutX="102.0" layoutY="112.0" prefHeight="25.0" prefWidth="264.0" promptText="release year (YYYY)" />
         <TextField fx:id="numberOfBooksField" layoutX="102.0" layoutY="152.0" prefHeight="25.0" prefWidth="264.0" promptText="amount" />

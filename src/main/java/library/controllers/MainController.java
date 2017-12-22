@@ -13,12 +13,12 @@ public class MainController {
 
 
     public void addNewBook(javafx.event.ActionEvent actionEvent) throws SQLException, IOException {
-       new AddBookController().showAddBookToDbWindow(actionEvent);
+       new RegisterBookController().showAddBookToDbWindow(actionEvent);
     }
 
 
     public void addNewUser(javafx.event.ActionEvent actionEvent) throws SQLException {
-        new AddUserController().showAddUserToDbWindow(actionEvent);
+        new RegisterUserController().showAddUserToDbWindow(actionEvent);
     }
 
 

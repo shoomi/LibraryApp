@@ -2,7 +2,7 @@ package library.controllers;
 
 import library.formvalidations.BookValuesControl;
 import javafx.event.ActionEvent;
-import library.operations.RegBookInDb;
+import library.operations.RegisterBookInDb;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,7 +17,7 @@ import javafx.scene.Node;
 import java.io.IOException;
 
 
-public class AddBookController {
+public class RegisterBookController {
 
     @FXML
     private TextField titleField;
@@ -39,11 +39,11 @@ public class AddBookController {
     @FXML
     private Label addingBookConfirmLabel;
 
-    private RegBookInDb regBookInDb;
+    private RegisterBookInDb registerBookInDb;
     private BookValuesControl bookValuesControl;
 
-    public AddBookController (){
-        regBookInDb = new RegBookInDb();
+    public RegisterBookController(){
+        registerBookInDb = new RegisterBookInDb();
         bookValuesControl = new BookValuesControl();
     }
 
@@ -52,7 +52,7 @@ public class AddBookController {
 
         try {
             Stage stage = new Stage();
-            Parent root = FXMLLoader.load(getClass().getResource("/fxml/addBook.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/fxml/registerBook.fxml"));
             stage.setTitle("Register new book");
             stage.setMinHeight(180);
             stage.setMinWidth(450);
@@ -74,7 +74,7 @@ public class AddBookController {
 
         if (bookValuesControl.checkValues(titleField, authorField, yearBookField, numberOfBooksField, titleLabel, authorLabel, numberOfBooksLabel, yearBookLabel)) {
 
-            regBookInDb.addNewBook(titleField.getText(), authorField.getText(), yearBookField.getText(), Integer.parseInt(numberOfBooksField.getText()));
+            registerBookInDb.addNewBook(titleField.getText(), authorField.getText(), yearBookField.getText(), Integer.parseInt(numberOfBooksField.getText()));
             addingBookConfirmLabel.setText(String.format("The book '%s' '%s' was successfully added to database ", titleField.getText(), authorField.getText()));
 
             titleField.setText(null);
