@@ -13,10 +13,10 @@ public class LoginValidation {
     }
 
     public boolean loginAndPasswordCheck(String login, Label loginLabel, String password, Label passwordLabel) {
-        boolean loginExists = false;
-        boolean passwordIsValid = false;
 
-        loginExists = libWorker.loginExists(login);
+        boolean passwordIsValid = false;
+        boolean loginExists = libWorker.loginExists(login);
+
         if (loginExists) {
             loginLabel.setText(null);
             passwordIsValid = Password.checkPassword(password, libWorker.getUserPassword(login));
