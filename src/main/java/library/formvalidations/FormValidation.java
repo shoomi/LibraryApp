@@ -13,16 +13,16 @@ import java.util.regex.Pattern;
 
 public class FormValidation {
 
-    public static boolean textFieldNotEmpty(TextField text, Label label, String sValidationText) {
+    public static boolean isTextFieldEmpty(TextField text, Label label, String sValidationText) {
         if (text.getText() != null && !text.getText().isEmpty()) {
             label.setText(null);
-            return true;
+            return false;
         }
         label.setText(sValidationText);
-        return false;
+        return true;
     }
 
-    public static boolean telephoneIsValid(TextField tel, Label label, String sValidationText) {
+    public static boolean isTelephoneValid(TextField tel, Label label, String sValidationText) {
 
         Pattern pattern = Pattern.compile("\\d{10}|\\d{12}|\\d{13}|\\d{3}-\\d{7}|\\d{3}-\\d{4}-\\d{3}|\\d{3}-\\d{3}-\\d{4}|\\+\\d{12}|\\+\\d{3}-\\d{9}|\\+\\d{3}-\\d{3}-\\d{3}-\\d{3}|\\+\\d{2}-\\d{3}-\\d{4}-\\d{3}|\\+\\d{3}-\\d{2}-\\d{3}-\\d{4}|\\d{3} \\d{7}|\\d{3} \\d{4} \\d{3}|\\d{3} \\d{3} \\d{4}|\\+\\d{3} \\d{9}|\\+\\d{3} \\d{3} \\d{3} \\d{3}|\\+\\d{2} \\d{3} \\d{4} \\d{3}|\\+\\d{3} \\d{2} \\d{3} \\d{4}");
 
@@ -37,7 +37,7 @@ public class FormValidation {
         return false;
     }
 
-    public static boolean dateIsValid(TextField date, Label label, String sValidationText) {
+    public static boolean isDateValid(TextField date, Label label, String sValidationText) {
 
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("uuuu-MM-dd");
 
@@ -56,18 +56,16 @@ public class FormValidation {
         }
     }
 
-    public static boolean loginIsNotBusy(TextField login, Label label, String sValidationText) {
+    public static boolean isLoginBusy(TextField login, Label label, String sValidationText) {
 
-        if (new LibWorker().loginExists(login.getText())) {
+        if (new LibWorker().doesLoginExists(login.getText())) {
             label.setText(sValidationText);
-            return false;
+            return true;
         }
-
-
-        return true;
+        return false;
     }
 
-    public static boolean bookYearIsValid(TextField bookYear, Label label, String sValidationText) {
+    public static boolean isBookYearValid(TextField bookYear, Label label, String sValidationText) {
         if (bookYear.getText().length() == 4 && bookYear.getText().chars().allMatch(Character::isDigit)) {
             label.setText(null);
             return true;
@@ -76,7 +74,7 @@ public class FormValidation {
         return false;
     }
 
-    public static boolean numberOfBooksIsValid(TextField numberOfBooks, Label label, String sValidationText) {
+    public static boolean isNumberOfBooksValid(TextField numberOfBooks, Label label, String sValidationText) {
         if (numberOfBooks.getText().chars().allMatch(Character::isDigit) && Integer.parseInt(numberOfBooks.getText()) > 0) {
             label.setText(null);
             return true;

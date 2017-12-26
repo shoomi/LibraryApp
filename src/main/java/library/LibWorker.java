@@ -13,7 +13,7 @@ import java.sql.*;
 public class LibWorker {
 
 
-    public boolean loadDataFromDbInBookList(ObservableList<Book> booksList) {
+    public boolean loadFreeBooksToList(ObservableList<Book> booksList) {
 
         int sequenceNumber = 1;
 
@@ -39,9 +39,9 @@ public class LibWorker {
     }
 
 
-    public void addNewUserToDbUsers(User libUser) {
+    public void addNewUserToDb(User libUser) {
 
-        String addNewUser = "INSERT INTO  mylibrary.`users` (login, first_name, last_name, phone_number, date_of_birth, password) VALUES (?,?, ?,?,?,?)";
+        String addNewUser = "INSERT INTO users (login, first_name, last_name, phone_number, date_of_birth, password) VALUES (?,?, ?,?,?,?)";
         try (Connection con = NewConnection.getConnection()) {
 
             PreparedStatement ps = con.prepareStatement(addNewUser);
@@ -57,9 +57,9 @@ public class LibWorker {
         }
     }
 
-    public void addNewBookToDbBooks(Book book) {
+    public void addNewBookToDb(Book book) {
 
-        String addNewBook = "INSERT INTO  mylibrary.`books` (title, author, release_date, stock) VALUES (?,?,?,?)";
+        String addNewBook = "INSERT INTO books (title, author, release_date, stock) VALUES (?,?,?,?)";
         try (Connection con = NewConnection.getConnection()) {
 
             PreparedStatement ps = con.prepareStatement(addNewBook);
@@ -73,12 +73,12 @@ public class LibWorker {
         }
     }
 
-    public void giveNewBookToUser(String userLogin, String bookTitle, String bookAuthor, String booksYearRelese) {
+    public void userTakesTheBook(String userLogin, String bookTitle, String bookAuthor, String booksYearRelease) {
 
         try (Connection con = NewConnection.getConnection()) {
 
             Statement statement = con.createStatement();
-            statement.execute(String.format("INSERT INTO mylibrary.`borrowings` (user_id, book_id, borrowing_date) VALUES ((SELECT user_id\n" +
+            statement.execute(String.format("INSERT INTO borrowings (user_id, book_id, borrowing_date) VALUES ((SELECT user_id\n" +
                     "                                                                               FROM users\n" +
                     "                                                                               WHERE login = '%s'),\n" +
                     "                                                                              (SELECT book_id\n" +
@@ -86,7 +86,7 @@ public class LibWorker {
                     "                                                                               WHERE\n" +
                     "                                                                                 title = '%s' AND author = '%s' AND\n" +
                     "                                                                                 release_date = '%s'),\n" +
-                    "                                                                              '%s')", userLogin, bookTitle, bookAuthor, booksYearRelese, new DateUtil().getCurrentTime()));
+                    "                                                                              '%s')", userLogin, bookTitle, bookAuthor, booksYearRelease, new DateUtil().getCurrentTime()));
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -98,7 +98,7 @@ public class LibWorker {
 
         try (Connection con = NewConnection.getConnection()) {
 
-            PreparedStatement ps = con.prepareStatement("UPDATE mylibrary.books SET stock = stock + ? WHERE books.title = ? AND books.author = ? AND release_date = ?");
+            PreparedStatement ps = con.prepareStatement("UPDATE books SET stock = stock + ? WHERE books.title = ? AND books.author = ? AND release_date = ?");
             ps.setInt(1, book.getStock());
             ps.setString(2, book.getTitle());
             ps.setString(3, book.getAuthor());
@@ -111,12 +111,12 @@ public class LibWorker {
     }
 
 
-    public void returnUserBook(String userLogin, String bookTitle, String bookAuthor, String booksYearRelease) {
+    public void userReturnsTheBook(String userLogin, String bookTitle, String bookAuthor, String booksYearRelease) {
 
         try (Connection con = NewConnection.getConnection()) {
 
             Statement statement = con.createStatement();
-            statement.execute(String.format("UPDATE mylibrary.borrowings\n" +
+            statement.execute(String.format("UPDATE borrowings\n" +
                     "SET returning_date = '%s'\n" +
                     "WHERE user_id = (SELECT user_id\n" +
                     "                 FROM users\n" +
@@ -131,7 +131,7 @@ public class LibWorker {
     }
 
 
-    public boolean loginExists(String userLogin) {
+    public boolean doesLoginExists(String userLogin) {
 
         try (Connection con = NewConnection.getConnection()) {
             Statement statement = con.createStatement();
@@ -148,7 +148,7 @@ public class LibWorker {
     }
 
 
-    public boolean doesBookExist(Book book) {
+    public boolean doesTheBookExist(Book book) {
 
         try (Connection con = NewConnection.getConnection()) {
             Statement statement = con.createStatement();
@@ -164,7 +164,7 @@ public class LibWorker {
     }
 
 
-    public boolean userBorrowThisBook(String userLogin, String bookTitle, String bookAuthor, String booksYearRelease) {
+    public boolean doesUserBorrowThisBook(String userLogin, String bookTitle, String bookAuthor, String booksYearRelease) {
 
         String query = String.format("SELECT borrowing_date\n" +
                 "FROM borrowings\n" +
@@ -188,7 +188,7 @@ public class LibWorker {
     }
 
 
-    public boolean loadDataFromDbInBorrowedBooksList(ObservableList<Book> borrowedBooksList) {
+    public boolean loadBorrowedBooksToList(ObservableList<Book> borrowedBooksList) {
 
         int sequenceNumber = 1;
 

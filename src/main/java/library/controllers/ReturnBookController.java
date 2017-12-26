@@ -96,7 +96,7 @@ public class ReturnBookController {
         borrowedBooksList = FXCollections.observableArrayList();
         filteredBorrowedBooksList = new FilteredList<>(borrowedBooksList, e -> true);
 
-        if (!new LibWorker().loadDataFromDbInBorrowedBooksList(borrowedBooksList)) {
+        if (!new LibWorker().loadBorrowedBooksToList(borrowedBooksList)) {
             Dialogs.showInfoDialog("Information", "You have nothing to return");
         }
     }

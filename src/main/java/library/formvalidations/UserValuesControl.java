@@ -8,30 +8,30 @@ public class UserValuesControl {
 
     public boolean checkValues(TextField loginField, TextField passwordField, TextField firstNameField, TextField lastNameField, TextField telephoneField, TextField dateField, Label loginLabel, Label passwordLabel, Label firsNameLabel, Label lastNameLabel, Label telLabel, Label dateLabel) {
 
-        boolean loginIsNotBusy = false;
-        boolean telephoneFieldIsValid = false;
-        boolean dateIsValid = false;
+        boolean isLoginBusy = false;
+        boolean isTelephoneFieldValid = false;
+        boolean isDateValid = false;
 
-        boolean loginFieldIsNotEmpty = FormValidation.textFieldNotEmpty(loginField, loginLabel, "enter login");
-        boolean passwordIsNotEmpty = FormValidation.textFieldNotEmpty(passwordField, passwordLabel, "enter password");
-        boolean firstNameFieldIsNotEmpty = FormValidation.textFieldNotEmpty(firstNameField, firsNameLabel, "enter Firs Name");
-        boolean lastNameFieldIsNotEmpty = FormValidation.textFieldNotEmpty(lastNameField, lastNameLabel, "enter Last Name");
-        boolean telephoneFieldIsNotEmpty = FormValidation.textFieldNotEmpty(telephoneField, telLabel, "enter telephone");
-        boolean dateFieldIsNotEmpty = FormValidation.textFieldNotEmpty(dateField, dateLabel, "must be yyyy-MM-dd");
+        boolean isLoginFieldEmpty = FormValidation.isTextFieldEmpty(loginField, loginLabel, "enter login");
+        boolean isPasswordEmpty = FormValidation.isTextFieldEmpty(passwordField, passwordLabel, "enter password");
+        boolean isFirstNameFieldEmpty = FormValidation.isTextFieldEmpty(firstNameField, firsNameLabel, "enter Firs Name");
+        boolean isLastNameFieldEmpty = FormValidation.isTextFieldEmpty(lastNameField, lastNameLabel, "enter Last Name");
+        boolean isTelephoneFieldEmpty = FormValidation.isTextFieldEmpty(telephoneField, telLabel, "enter telephone");
+        boolean isDateFieldEmpty = FormValidation.isTextFieldEmpty(dateField, dateLabel, "must be yyyy-MM-dd");
 
-        if (loginFieldIsNotEmpty) {
-            loginIsNotBusy = FormValidation.loginIsNotBusy(loginField, loginLabel, "this login is busy");
+        if (!isLoginFieldEmpty) {
+            isLoginBusy = FormValidation.isLoginBusy(loginField, loginLabel, "this login is busy");
         }
 
-        if (telephoneFieldIsNotEmpty) {
-            telephoneFieldIsValid = FormValidation.telephoneIsValid(telephoneField, telLabel, "invalid value");
+        if (!isTelephoneFieldEmpty) {
+            isTelephoneFieldValid = FormValidation.isTelephoneValid(telephoneField, telLabel, "invalid value");
         }
 
-        if (dateFieldIsNotEmpty) {
-            dateIsValid = FormValidation.dateIsValid(dateField, dateLabel, "wrong date");
+        if (!isDateFieldEmpty) {
+            isDateValid = FormValidation.isDateValid(dateField, dateLabel, "wrong date");
         }
 
-        return loginFieldIsNotEmpty && passwordIsNotEmpty && firstNameFieldIsNotEmpty && lastNameFieldIsNotEmpty && telephoneFieldIsNotEmpty && telephoneFieldIsValid && loginIsNotBusy && dateFieldIsNotEmpty && dateIsValid;
+        return !isLoginFieldEmpty && !isPasswordEmpty && !isFirstNameFieldEmpty && !isLastNameFieldEmpty && !isTelephoneFieldEmpty && !isDateFieldEmpty && !isLoginBusy && isTelephoneFieldValid && isDateValid;
     }
 
 }

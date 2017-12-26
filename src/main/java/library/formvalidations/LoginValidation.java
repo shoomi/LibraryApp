@@ -15,7 +15,7 @@ public class LoginValidation {
     public boolean loginAndPasswordCheck(String login, Label loginLabel, String password, Label passwordLabel) {
 
         boolean passwordIsValid = false;
-        boolean loginExists = libWorker.loginExists(login);
+        boolean loginExists = libWorker.doesLoginExists(login);
 
         if (loginExists) {
             loginLabel.setText(null);

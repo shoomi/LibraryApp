@@ -23,7 +23,7 @@ public class ReturnBook {
             Dialogs.showInfoDialog("Hey", "Make your choice");
         } else {
 
-                libWorker.returnUserBook(LoginCheck.userLogin, titleLabel.getText(), authorLabel.getText(), bookYearLabel.getText());
+                libWorker.userReturnsTheBook(LoginCheck.userLogin, titleLabel.getText(), authorLabel.getText(), bookYearLabel.getText());
 
             Dialogs.showInfoDialog("Information", String.format("The book '%s' was returned! Thanks", titleLabel.getText()));
 

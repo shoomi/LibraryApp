@@ -20,8 +20,8 @@ public class RegisterBookInDb {
         libBook.setReleaseYear(releaseYear);
         libBook.setStock(numberOfBooks);
 
-        if (!libWorker.doesBookExist(libBook)) {
-            libWorker.addNewBookToDbBooks(libBook);
+        if (!libWorker.doesTheBookExist(libBook)) {
+            libWorker.addNewBookToDb(libBook);
         } else {
             libWorker.addBookToExisting(libBook);
         }

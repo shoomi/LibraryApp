@@ -18,9 +18,9 @@ public class TakeBook {
 
     private boolean giveThisBook(Label titleLabel, Label authorLabel, Label bookYearLabel) {
 
-            if (!libWorker.userBorrowThisBook(LoginCheck.userLogin, titleLabel.getText(), authorLabel.getText(), bookYearLabel.getText())) {
+            if (!libWorker.doesUserBorrowThisBook(LoginCheck.userLogin, titleLabel.getText(), authorLabel.getText(), bookYearLabel.getText())) {
 
-                libWorker.giveNewBookToUser(LoginCheck.userLogin, titleLabel.getText(), authorLabel.getText(), bookYearLabel.getText());
+                libWorker.userTakesTheBook(LoginCheck.userLogin, titleLabel.getText(), authorLabel.getText(), bookYearLabel.getText());
 
                 titleLabel.setText("");
                 authorLabel.setText("");

@@ -94,7 +94,7 @@ public class TakeBookController {
         booksList = FXCollections.observableArrayList();
         filteredBooksList = new FilteredList<>(booksList, e -> true);
 
-        if (!new LibWorker().loadDataFromDbInBookList(booksList)) {
+        if (!new LibWorker().loadFreeBooksToList(booksList)) {
             Dialogs.showInfoDialog("Info", "Sorry, but currently there is no books in our library");
         }
 

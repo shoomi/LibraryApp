@@ -25,7 +25,7 @@ public class RegisterUserInDb {
         user.setTelephone(telephone);
         user.setDate_of_birth(dateOfBirth);
 
-        libWorker.addNewUserToDbUsers(user);
+        libWorker.addNewUserToDb(user);
 
     }
 
