@@ -4,7 +4,6 @@ import library.Dialogs;
 import library.LibWorker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -24,13 +23,7 @@ public class FormValidation {
 
     public static boolean isTelephoneValid(TextField tel, Label label, String sValidationText) {
 
-        Pattern pattern = Pattern.compile("\\d{10}|\\d{12}|\\d{13}|\\d{3}-\\d{7}|\\d{3}-\\d{4}-\\d{3}|\\d{3}-\\d{3}-\\d{4}|\\+\\d{12}|\\+\\d{3}-\\d{9}|\\+\\d{3}-\\d{3}-\\d{3}-\\d{3}|\\+\\d{2}-\\d{3}-\\d{4}-\\d{3}|\\+\\d{3}-\\d{2}-\\d{3}-\\d{4}|\\d{3} \\d{7}|\\d{3} \\d{4} \\d{3}|\\d{3} \\d{3} \\d{4}|\\+\\d{3} \\d{9}|\\+\\d{3} \\d{3} \\d{3} \\d{3}|\\+\\d{2} \\d{3} \\d{4} \\d{3}|\\+\\d{3} \\d{2} \\d{3} \\d{4}");
-
-        Matcher matcher = pattern.matcher(tel.getText());
-
-        if (matcher.matches()) {
-            label.setText(null);
-            tel.setText(tel.getText().replaceAll("[\\-\\+\\ ]", ""));
+        if (tel.getText().length()==12) {
             return true;
         }
         label.setText(sValidationText);
@@ -45,7 +38,7 @@ public class FormValidation {
             LocalDate ld = LocalDate.parse(date.getText(), dateFormatter);
 
             if (ld.getYear() < 1900) {
-                Dialogs.showInfoDialog("Error","It seems you've entered invalid year");
+                Dialogs.showInfoDialog("Error", "It seems you've entered invalid year");
                 return false;
             }
             return true;
@@ -66,7 +59,7 @@ public class FormValidation {
     }
 
     public static boolean isBookYearValid(TextField bookYear, Label label, String sValidationText) {
-        if (bookYear.getText().length() == 4 && bookYear.getText().chars().allMatch(Character::isDigit)) {
+        if (bookYear.getText().length() == 4) {
             label.setText(null);
             return true;
         }
@@ -74,13 +67,5 @@ public class FormValidation {
         return false;
     }
 
-    public static boolean isNumberOfBooksValid(TextField numberOfBooks, Label label, String sValidationText) {
-        if (numberOfBooks.getText().chars().allMatch(Character::isDigit) && Integer.parseInt(numberOfBooks.getText()) > 0) {
-            label.setText(null);
-            return true;
-        }
-        label.setText(sValidationText);
-        return false;
-    }
 
 }

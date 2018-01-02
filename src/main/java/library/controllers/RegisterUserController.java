@@ -11,6 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import library.operations.RegisterUserInDb;
+import library.utils.NumberFieldSetter;
 
 import java.io.IOException;
 
@@ -67,6 +68,7 @@ public class RegisterUserController {
             stage.initOwner(((Node) actionEvent.getSource()).getScene().getWindow());
             stage.show();
 
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -89,7 +91,15 @@ public class RegisterUserController {
             lastNameField.setText(null);
             telephoneField.setText(null);
             dateField.setText(null);
+
         }
+    }
+
+
+    @FXML
+    public void initialize() {
+
+        NumberFieldSetter.setTextField(telephoneField);
     }
 
 

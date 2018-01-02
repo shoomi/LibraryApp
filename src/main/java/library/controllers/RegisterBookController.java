@@ -13,6 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.Node;
+import library.utils.NumberFieldSetter;
 
 import java.io.IOException;
 
@@ -42,7 +43,7 @@ public class RegisterBookController {
     private RegisterBookInDb registerBookInDb;
     private BookValuesControl bookValuesControl;
 
-    public RegisterBookController(){
+    public RegisterBookController() {
         registerBookInDb = new RegisterBookInDb();
         bookValuesControl = new BookValuesControl();
     }
@@ -81,7 +82,16 @@ public class RegisterBookController {
             authorField.setText(null);
             yearBookField.setText(null);
             numberOfBooksField.setText(null);
+
+
         }
+    }
+
+
+    @FXML
+    public void initialize() {
+
+        NumberFieldSetter.setTextField(numberOfBooksField);
     }
 
 

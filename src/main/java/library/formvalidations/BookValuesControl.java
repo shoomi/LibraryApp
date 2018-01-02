@@ -8,7 +8,6 @@ public class BookValuesControl {
     public boolean checkValues(TextField titleField, TextField authorField, TextField yearBookField, TextField numberOfBooksField, Label titleLabel, Label authorLabel, Label numberOfBooksLabel, Label yearBookLabel) {
 
         boolean isYearValid = false;
-        boolean isAmountOfBooksValid = false;
 
         boolean isTitleEmpty = FormValidation.isTextFieldEmpty(titleField, titleLabel, "enter Title");
         boolean isAuthorEmpty = FormValidation.isTextFieldEmpty(authorField, authorLabel, "enter Author");
@@ -18,11 +17,8 @@ public class BookValuesControl {
         if (!isYearEmpty) {
             isYearValid = FormValidation.isBookYearValid(yearBookField, yearBookLabel, "invalid value");
         }
-        if (!isAmountEmpty) {
-            isAmountOfBooksValid = FormValidation.isNumberOfBooksValid(numberOfBooksField, numberOfBooksLabel, "invalid value");
-        }
 
-        return !isTitleEmpty && !isAuthorEmpty && !isYearEmpty && !isAmountEmpty && isYearValid && isAmountOfBooksValid;
+        return !isTitleEmpty && !isAuthorEmpty && !isYearEmpty && !isAmountEmpty && isYearValid;
 
 
     }
