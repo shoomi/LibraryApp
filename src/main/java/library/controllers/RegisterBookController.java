@@ -90,7 +90,7 @@ public class RegisterBookController {
 
     @FXML
     public void initialize() {
-
+        NumberFieldSetter.setTextField(yearBookField);
         NumberFieldSetter.setTextField(numberOfBooksField);
     }
 
