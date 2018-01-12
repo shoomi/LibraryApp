@@ -5,6 +5,12 @@ With this program you can add books to database, register users who can borrow a
 3. Log in with user's password and login
 4. Take some books and return them
 
+## Run with IDE
+* Install JDK
+* Install IntelliJ IDEA, Eclipse, etc.
+* Clone and import project
+* Run src/main/java/library/Main.java (main class)
+
 ## Screenshots 
 ![libraryapp](https://user-images.githubusercontent.com/20031417/34885146-bb40caea-f7c7-11e7-888d-69037f63bf4a.jpg)
 ![addnewuser](https://user-images.githubusercontent.com/20031417/34885149-be5ea58a-f7c7-11e7-94ad-e3d90b690883.jpg)
