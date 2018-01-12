@@ -1,5 +1,5 @@
 # LibraryApp 
-This is JavaFx program to add books to database, register users who can borrow and return books.
+With this program you can add books to database, register users who can borrow and return books. 
 1. First add some books to database
 2. Register new user
 3. Log in with user's password and login
