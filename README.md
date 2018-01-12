@@ -3,7 +3,7 @@ With this program you can add books to database, register users who can borrow a
 1. First add some books to database
 2. Register new user
 3. Log in with user's password and login
-4. Take some books and return them.
+4. You could take some books and return them.
 
 ## How to run 
 * Install JDK
