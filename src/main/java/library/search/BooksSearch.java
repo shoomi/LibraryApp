@@ -11,9 +11,8 @@ import java.util.function.Predicate;
 public class BooksSearch implements Search {
 
     @Override
-    public void search(TextField searchField, FilteredList filteredBooksList, TableView<Book> tableBorrowingBooks) {
+    public void search(TextField searchField, FilteredList filteredBooksList, TableView tableBorrowingBooks) {
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
-
 
             filteredBooksList.setPredicate((Predicate<? super Book>) book -> {
 

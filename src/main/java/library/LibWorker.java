@@ -24,7 +24,6 @@ public class LibWorker {
                     "FROM books\n" +
                     "WHERE book_id NOT IN(SELECT DISTINCT borrowings.book_id\n" +
                     "                 FROM borrowings\n" +
-                    "                   INNER JOIN books ON borrowings.book_id = books.book_id\n" +
                     "                 WHERE ((SELECT count(book_id) FROM borrowings WHERE borrowings.book_id = books.book_id AND returning_date IS NULL) = (SELECT stock FROM books WHERE books.book_id =borrowings.book_id)))");
 
             while (rs.next()) {
@@ -166,8 +165,7 @@ public class LibWorker {
 
     public boolean doesUserBorrowThisBook(String userLogin, String bookTitle, String bookAuthor, String booksYearRelease) {
 
-        String query = String.format("SELECT borrowing_date\n" +
-                "FROM borrowings\n" +
+        String query = String.format("SELECT borrowing_date FROM borrowings\n" +
                 "  INNER JOIN books ON borrowings.book_id = books.book_id\n" +
                 "WHERE borrowings.user_id = (SELECT user_id FROM users WHERE login = '%s') AND\n" +
                 "      title = '%s' and author = '%s' AND release_date = '%s' AND returning_date IS NULL", userLogin, bookTitle, bookAuthor, booksYearRelease);

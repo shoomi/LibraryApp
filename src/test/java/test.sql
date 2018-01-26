@@ -1,8 +1,8 @@
-# SELECT borrowing_date
-# FROM ((borrowings
-#   INNER JOIN books ON borrowings.book_id = books.book_id)
-#   INNER JOIN users ON borrowings.user_id = users.user_id)
-# WHERE (users.login = 'shoomi') AND returning_date IS NULL
+SELECT borrowing_date
+FROM ((borrowings
+  INNER JOIN books ON borrowings.book_id = books.book_id)
+  INNER JOIN users ON borrowings.user_id = users.user_id)
+WHERE (users.login = 'shoomi') AND returning_date IS NULL
 
 
 # SELECT
@@ -62,21 +62,13 @@
 #                                                              returning_date IS NULL);
 
 
-SELECT
-  books.title,
-  books.author,
-  books.release_date
-FROM books
-WHERE book_id NOT IN (SELECT DISTINCT borrowings.book_id
-                      FROM borrowings
-                        INNER JOIN books ON borrowings.book_id = books.book_id
-                      WHERE ((SELECT count(book_id)
-                              FROM borrowings
-                              WHERE borrowings.book_id = books.book_id AND returning_date IS NULL) = (SELECT stock
-                                                                                                      FROM books
-                                                                                                      WHERE
-                                                                                                        books.book_id =
-                                                                                                        borrowings.book_id)));
+SELECT books.title, books.author, books.release_date
+FROM books WHERE book_id NOT IN (SELECT DISTINCT borrowings.book_id
+FROM borrowings
+WHERE ((SELECT count(book_id)
+FROM borrowings
+WHERE borrowings.book_id = books.book_id AND returning_date IS NULL) = (SELECT stock FROM books WHERE
+books.book_id = borrowings.book_id)));
 
 
 SELECT stock
@@ -106,4 +98,7 @@ WHERE ((SELECT count(book_id)
 
 
 
-SELECT password from users WHERE login = 'shoomi'
+SELECT borrowing_date FROM borrowings WHERE (book_id = (SELECT books.book_id FROM books WHERE author = 'Marcel Proust'));
+
+SELECT borrowing_date FROM borrowings inner JOIN books on borrowings.book_id = books.book_id WHERE author = 'Marcel Proust';
+

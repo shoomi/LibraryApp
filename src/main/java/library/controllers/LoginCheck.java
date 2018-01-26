@@ -62,7 +62,7 @@ public class LoginCheck {
         userLogin = loginField.getText();
         String userPassword = passwordField.getText();
 
-        switch (MainController.someOperationsButtonId) {
+        switch (MainController.someOperationsButtonId) {   // in someOperationsButtonId we previously wrote the button id what has been clicked in MenuItem
 
             case "takeBook":
 

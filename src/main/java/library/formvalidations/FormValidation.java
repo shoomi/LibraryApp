@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 
 public class FormValidation {
 
+    // here we check each TextField for correct filling and show sValidationText in the label (that is a little bit to the right of the TextField) if something is wrong
     public static boolean isTextFieldEmpty(TextField text, Label label, String sValidationText) {
         if (text.getText() != null && !text.getText().isEmpty()) {
             label.setText(null);

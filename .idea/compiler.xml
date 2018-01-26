@@ -20,7 +20,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="1.8">
-      <module name="LibraryApp" target="1.8" />
+      <module name="LibraryApp" target="9.0.4" />
     </bytecodeTargetLevel>
   </component>
 </project>

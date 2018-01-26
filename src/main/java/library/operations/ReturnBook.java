@@ -33,8 +33,8 @@ public class ReturnBook {
 
             Book selectedItem = tableBorrowingBooks.getSelectionModel().getSelectedItem();
 
-            booksList.remove(selectedItem);                         // delete selected book from list after library.search
-            tableBorrowingBooks.getItems().remove(selectedItem);    // delete selected book without library.search
+            booksList.remove(selectedItem);                         // delete selected book from list after searching
+            tableBorrowingBooks.getItems().remove(selectedItem);    // delete selected book without searching
 
         }
     }

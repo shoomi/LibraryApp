@@ -45,11 +45,11 @@ public class TakeBook {
 
                 Book selectedItem = tableBooks.getSelectionModel().getSelectedItem();
 
-                booksList.remove(selectedItem);             // delete selected book from list after library.search
-                tableBooks.getItems().remove(selectedItem);    // delete selected book without library.search
+                booksList.remove(selectedItem);             // delete selected book from list after searching
+                tableBooks.getItems().remove(selectedItem);    // delete selected book without searching
 
             } else {
-                Dialogs.showInfoDialog("Opps", "It's looks like you have already borrowed this book");
+                Dialogs.showInfoDialog("Oops", "It's looks like you have already borrowed this book");
             }
 
         }

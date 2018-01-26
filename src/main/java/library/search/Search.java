@@ -7,5 +7,5 @@ import library.libitems.Book;
 
 
 public interface Search {
-    void search(TextField searchField, FilteredList filteredBooksList, TableView<Book> tableBorrowingBooks);
+    void search(TextField searchField, FilteredList filteredBooksList, TableView tableBorrowingBooks);
 }
