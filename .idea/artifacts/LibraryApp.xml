@@ -1,0 +1,20 @@
+<component name="ArtifactManager">
+  <artifact type="javafx" name="LibraryApp">
+    <output-path>$PROJECT_DIR$/out/artifacts/LibraryApp</output-path>
+    <properties id="javafx-properties">
+      <options>
+        <option name="appClass" value="start.Main" />
+        <option name="description" value="" />
+        <option name="htmlPlaceholderId" value="" />
+        <option name="title" value="" />
+        <option name="vendor" value="" />
+        <option name="version" value="" />
+      </options>
+    </properties>
+    <root id="root">
+      <element id="archive" name="LibraryApp.jar">
+        <element id="module-output" name="LibraryApp" />
+      </element>
+    </root>
+  </artifact>
+</component>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_libraryapp" default="compile.module.libraryapp">
+  <dirname property="module.libraryapp.basedir" file="${ant.file.module_libraryapp}"/>
+  
+  <property name="module.jdk.home.libraryapp" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.libraryapp" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.libraryapp" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.libraryapp" value="-encoding UTF-8 -source 1.8 -target 1.8 ${compiler.args}"/>
+  
+  <property name="libraryapp.output.dir" value="${module.libraryapp.basedir}/target/classes"/>
+  <property name="libraryapp.testoutput.dir" value="${module.libraryapp.basedir}/target/test-classes"/>
+  
+  <path id="libraryapp.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="libraryapp.module.production.classpath">
+    <path refid="${module.jdk.classpath.libraryapp}"/>
+    <path refid="library.maven:_mysql:mysql-connector-java:8.0.8-dmr.classpath"/>
+  </path>
+  
+  <path id="libraryapp.runtime.production.module.classpath">
+    <pathelement location="${libraryapp.output.dir}"/>
+    <path refid="library.maven:_mysql:mysql-connector-java:8.0.8-dmr.classpath"/>
+  </path>
+  
+  <path id="libraryapp.module.classpath">
+    <path refid="${module.jdk.classpath.libraryapp}"/>
+    <pathelement location="${libraryapp.output.dir}"/>
+    <path refid="library.maven:_mysql:mysql-connector-java:8.0.8-dmr.classpath"/>
+  </path>
+  
+  <path id="libraryapp.runtime.module.classpath">
+    <pathelement location="${libraryapp.testoutput.dir}"/>
+    <pathelement location="${libraryapp.output.dir}"/>
+    <path refid="library.maven:_mysql:mysql-connector-java:8.0.8-dmr.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.libraryapp">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.libraryapp">
+    <patternset refid="excluded.from.module.libraryapp"/>
+  </patternset>
+  
+  <path id="libraryapp.module.sourcepath">
+    <dirset dir="${module.libraryapp.basedir}">
+      <include name="src/main/java"/>
+      <include name="src/main/resources"/>
+    </dirset>
+  </path>
+  
+  <path id="libraryapp.module.test.sourcepath">
+    <dirset dir="${module.libraryapp.basedir}">
+      <include name="src/test/java"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.libraryapp" depends="compile.module.libraryapp.production,compile.module.libraryapp.tests" description="Compile module LibraryApp"/>
+  
+  <target name="compile.module.libraryapp.production" depends="register.custom.compilers" description="Compile module LibraryApp; production classes">
+    <mkdir dir="${libraryapp.output.dir}"/>
+    <javac2 destdir="${libraryapp.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.libraryapp}/javac">
+      <compilerarg line="${compiler.args.libraryapp}"/>
+      <bootclasspath refid="libraryapp.module.bootclasspath"/>
+      <classpath refid="libraryapp.module.production.classpath"/>
+      <src refid="libraryapp.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.libraryapp"/>
+    </javac2>
+    
+    <copy todir="${libraryapp.output.dir}">
+      <fileset dir="${module.libraryapp.basedir}/src/main/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.libraryapp.basedir}/src/main/resources">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.libraryapp.tests" depends="register.custom.compilers,compile.module.libraryapp.production" description="compile module LibraryApp; test classes" unless="skip.tests">
+    <mkdir dir="${libraryapp.testoutput.dir}"/>
+    <javac2 destdir="${libraryapp.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.libraryapp}/javac">
+      <compilerarg line="${compiler.args.libraryapp}"/>
+      <bootclasspath refid="libraryapp.module.bootclasspath"/>
+      <classpath refid="libraryapp.module.classpath"/>
+      <src refid="libraryapp.module.test.sourcepath"/>
+      <patternset refid="excluded.from.compilation.libraryapp"/>
+    </javac2>
+    
+    <copy todir="${libraryapp.testoutput.dir}">
+      <fileset dir="${module.libraryapp.basedir}/src/test/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="clean.module.libraryapp" description="cleanup module">
+    <delete dir="${libraryapp.output.dir}"/>
+    <delete dir="${libraryapp.testoutput.dir}"/>
+  </target>
+</project>
