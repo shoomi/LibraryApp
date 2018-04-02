@@ -83,7 +83,6 @@ public class RegisterBookController {
             yearBookField.setText(null);
             numberOfBooksField.setText(null);
 
-
         }
     }
 

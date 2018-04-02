@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="dataSourceStorageLocal">
+<<<<<<< HEAD
     <data-source name="myLibrary@localhost" uuid="f437a02b-1195-49b3-9d05-c25efac62691">
       <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" />
+=======
+    <data-source name="mylibrary@localhost" uuid="bfe5540a-4182-4239-b17a-a51cda88c326">
+      <database-info product="MySQL" version="5.7.20-log" jdbc-version="4.0" driver-name="MySQL Connector Java" driver-version="mysql-connector-java-5.1.45 ( Revision: 9131eefa398531c7dc98776e8a3fe839e544c5b2 )">
+        <extra-name-characters>#@</extra-name-characters>
+        <identifier-quote-string>`</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="lower" quoted-identifiers="lower" />
+      <secret-storage>master_key</secret-storage>
+      <user-name>root</user-name>
+>>>>>>> basic
       <introspection-schemas>*:mylibrary</introspection-schemas>
     </data-source>
   </component>
