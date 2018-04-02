@@ -6,7 +6,7 @@ With this program you can add books to database, register users who can borrow a
 4. You could take books and return them.
 
 ## How to run 
-* Install JDK
+* Install JDK 9
 * Install IntelliJ IDEA, Eclipse, etc.
 * Clone and import project
 * Run src/main/java/library/Main.java (main class)
