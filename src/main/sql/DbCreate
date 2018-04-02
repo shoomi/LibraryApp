@@ -5,20 +5,7 @@ create table books (
   release_date varchar(4) default null,
   stock int(4) default '1',
   PRIMARY KEY (book_id)
-)
-
-
-create table borrowings (
-  id int(11) auto_increment,
-  user_id MEDIUMINT not null,
-  book_id int (11) not null,
-  borrowing_date datetime default null,
-  returning_date datetime default null,
-  primary key (id),
-  foreign key (user_id) references users (user_id),
-  foreign key (book_id) references books (book_id)
-)
-
+);
 
 CREATE TABLE users (
   user_id MEDIUMINT auto_increment,
@@ -30,4 +17,16 @@ CREATE TABLE users (
   password varchar(64) not null,
   PRIMARY KEY (user_id),
   UNIQUE KEY users_login_uindex (login)
-)
+);
+
+
+create table borrowings (
+  id int(11) auto_increment,
+  user_id MEDIUMINT not null,
+  book_id int (11) not null,
+  borrowing_date datetime default null,
+  returning_date datetime default null,
+  primary key (id),
+  foreign key (user_id) references users (user_id),
+  foreign key (book_id) references books (book_id)
+);
